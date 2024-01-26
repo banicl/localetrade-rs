@@ -23,11 +23,14 @@
         </div>
 
         <div class="input-row">
-          <input type="email" placeholder="Password 🌾" required>
-          <input type="text" placeholder="Confirm Password 🥬" required>
+          <input type="password" placeholder="Password 🌾" v-model="password" required>
+          <input type="password" placeholder="Confirm Password 🥬" v-model="confirmPassword" required>
         </div>
-
-        <button type="submit">✨ SIGN UP ✨</button><br>
+        <p v-if="password && confirmPassword && !isPasswordValid" class="password-warning">
+          Passwords do not match.
+        </p>
+        <br>
+        <button type="submit" :disabled="!isPasswordValid">✨ SIGN UP ✨</button><br>
         <p class="register-link">Already have an account? 👨🏻‍🌾 Log in.<br><a href="#" @click="goToLogin">Log in here!</a></p>
       </form>
     </div>
@@ -45,7 +48,14 @@ export default {
   data() {
     return {
       currentDate: '',
+      password: '',
+      confirmPassword: '',
     };
+  },
+  computed: {
+    isPasswordValid() {
+      return this.password && this.password === this.confirmPassword;
+    }
   },
   methods: {
     goToLogin() {
@@ -240,5 +250,11 @@ export default {
   .login-form button:hover {
     background-color: #F5d826;
   }
+
+  .password-warning {
+  color: red;
+  font-size: 14px;
+  margin-top: -15px;
+}
 
 </style>
