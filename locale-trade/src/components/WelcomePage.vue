@@ -35,10 +35,10 @@ export default {
   },
   methods: {
     goToLogin() {
-      this.$router.push({ name: 'Login' }); // Navigate to Login
+      this.$router.push({ name: 'Login' }); 
     },
     goToRegister() {
-      this.$router.push({ name: 'Register' }); // Navigate to Register
+      this.$router.push({ name: 'Register' });
     },
     updateDate() {
       this.currentDate = new Date().toLocaleDateString();
@@ -46,7 +46,7 @@ export default {
   },
   mounted() {
     this.updateDate();
-    setInterval(this.updateDate, 86400000); // Update date every day
+    setInterval(this.updateDate, 86400000); 
   }
 }
 
@@ -115,11 +115,11 @@ export default {
   }
 
   .logo-image {
-    max-width: 20%; 
+    max-width: 15%; 
     z-index: 1;
     height: auto;
     padding: none;
-    margin:none;
+    margin-bottom:10px;
   }
 
   .navbar {
