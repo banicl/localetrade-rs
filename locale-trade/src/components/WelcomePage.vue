@@ -5,29 +5,46 @@
 
     <nav class="navbar">
       <ul class="nav-menu">
-        <li><a href="#" @click="goToLogin">LOGIN</a></li>
-        <li><a href="#" @click="goToRegister">REGISTER</a></li>
+        <li><a href="#" @click="goToLogin">LOGIN 🍏</a></li>
+        <li><a href="#" @click="goToRegister">REGISTER 🍎</a></li>
       </ul>
     </nav>
-
     <div class="content">
-      <img src="@/assets/title.svg" alt="Title" class="title-image" /> <!-- SVG title -->
+      <img src="@/assets/logo.png" alt="Logo" class="logo-image" />
+      <img src="@/assets/title.svg" alt="Title" class="title-image" />
     </div>
+    <footer class="footer">
+      <p><b>&copy; 2024 🌿 LOCALE TRADE. All rights reserved.</b></p>
+      <div id="current-date"><span class="date-color"><b>{{ currentDate }}</b></span></div>
+    </footer>
   </div>
 </template>
 
 <script>
 export default {
   name: 'WelcomePage',
+  data() {
+    return {
+      currentDate: '',
+    };
+  },
   methods: {
     goToLogin() {
-      // Logic to navigate to the login page
+      
     },
     goToRegister() {
-      // Logic to navigate to the registration page
+      
+    },
+    updateDate() {
+      this.currentDate = new Date().toLocaleDateString();
     }
+  },
+  mounted() {
+    this.updateDate();
+    setInterval(this.updateDate, 86400000); // Update date every day
   }
 }
+
 </script>
 
 <style scoped>
@@ -58,10 +75,9 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
-    z-index: 1; /* Above the background image, below the content */
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
     }
-
 
   .background-image {
     position: absolute;
@@ -88,9 +104,17 @@ export default {
   .title-image {
     max-width: 80%;
     height: auto;
-    margin-bottom: 20px;
-    background-color: transparent; /* Ensure SVG has no background */
+    margin-bottom: 300px;
+    background-color: transparent; 
     display: block;
+  }
+
+  .logo-image {
+    max-width: 20%; 
+    z-index: 1;
+    height: auto;
+    padding: none;
+    margin:none;
   }
 
   .navbar {
@@ -100,6 +124,7 @@ export default {
     background-color: rgba(204, 204, 204, 0.3);
     box-shadow: 0 2px 4px #454545;
     padding: 10px 0;
+    margin: none;
   }
 
   .nav-menu {
@@ -122,10 +147,24 @@ export default {
     font-weight: bold;
     font-family: 'Dosis', sans-serif;
     font-size: 20px;
+    transition: color 0.3s ease;
   }
 
   .nav-menu a:hover {
-    text-decoration: underline;
+    color: #F5d826;
   }
+
+  .footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+  padding-bottom: 15px;
+  z-index: 2;
+  background-color: rgba(204, 204, 204, 0.3);
+  box-shadow: 0 -2px 5px #454545;
+  font-family: 'Dosis', sans-serif;
+}
 
 </style>
