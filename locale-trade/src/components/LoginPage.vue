@@ -2,7 +2,6 @@
   <div class="welcome-container">
     <div class="background-image"></div>
     <div class="overlay"></div>
-
     <nav class="navbar">
       <div class="nav-social">
         <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
@@ -19,7 +18,7 @@
         <img src="@/assets/login.svg" alt="Title" class="title-image" />
         <input type="text" placeholder="Username 🌽" required>
         <input type="password" placeholder="Password 🌾" required>
-        <button type="submit">SIGN IN</button><br>
+        <button type="submit">✨ SIGN IN ✨</button><br>
         <p class="register-link">Not yet registered? 👨🏻‍🌾 Sign up for free.<br><a href="#" @click="goToRegister">Create an account!</a></p>
       </form>
     </div>
@@ -226,7 +225,7 @@ export default {
     color: white;
     border-radius: 5px;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: background-color 0.3s ease;
   }
 
   .login-form button:hover {
