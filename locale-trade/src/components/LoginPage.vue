@@ -10,6 +10,7 @@
       </div>
       <ul class="nav-menu">
         <li><a href="#" @click="goToHome">HOME 🏡</a></li>
+        <li><a href="#" @click="goToRegister">REGISTER 🍎</a></li>
       </ul>
     </nav>
 
@@ -65,7 +66,7 @@ export default {
   }
 
   .title-image {
-    max-width: 80%;
+    max-width: 60%;
     height: auto;
     margin-bottom:30px;
     background-color: transparent; 

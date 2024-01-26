@@ -10,6 +10,7 @@
       </div>
       <ul class="nav-menu">
         <li><a href="#" @click="goToHome">HOME 🏡</a></li>
+        <li><a href="#" @click="goToLogin">LOGIN 🍏</a></li>
       </ul>
     </nav>
 
@@ -29,7 +30,6 @@
         <p v-if="password && confirmPassword && !isPasswordValid" class="password-warning">
           Passwords do not match.
         </p>
-        <br>
         <button type="submit" :disabled="!isPasswordValid">✨ SIGN UP ✨</button><br>
         <p class="register-link">Already have an account? 👨🏻‍🌾 Log in.<br><a href="#" @click="goToLogin">Log in here!</a></p>
       </form>
@@ -84,7 +84,7 @@ export default {
   }
 
   .title-image {
-    max-width: 80%;
+    max-width: 85%;
     height: auto;
     margin-bottom:30px;
     background-color: transparent; 
