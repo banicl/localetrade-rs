@@ -4,13 +4,18 @@
     <div class="overlay"></div>
 
     <nav class="navbar">
+      <div class="nav-social">
+        <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
+      </div>
       <ul class="nav-menu">
         <li><a href="#" @click="goToLogin">LOGIN 🍏</a></li>
         <li><a href="#" @click="goToRegister">REGISTER 🍎</a></li>
       </ul>
     </nav>
     <div class="content">
-      <img src="@/assets/logo.png" alt="Logo" class="logo-image" />
+      <img src="@/assets/logo-1.gif" alt="Logo" class="logo-image" />
       <img src="@/assets/title.svg" alt="Title" class="title-image" />
     </div>
     <footer class="footer">
@@ -30,10 +35,10 @@ export default {
   },
   methods: {
     goToLogin() {
-      
+      this.$router.push({ name: 'Login' }); // Navigate to Login
     },
     goToRegister() {
-      
+      this.$router.push({ name: 'Register' }); // Navigate to Register
     },
     updateDate() {
       this.currentDate = new Date().toLocaleDateString();
@@ -125,6 +130,9 @@ export default {
     box-shadow: 0 2px 4px #454545;
     padding: 10px 0;
     margin: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .nav-menu {
@@ -151,6 +159,21 @@ export default {
   }
 
   .nav-menu a:hover {
+    color: #F5d826;
+  }
+
+  .nav-social {
+    padding-left: 20px;
+  }
+
+  .nav-social a {
+    color: white;
+    margin-right: 10px;
+    font-size: 20px;
+    transition: color 0.3s ease;
+  }
+
+  .nav-social a:hover {
     color: #F5d826;
   }
 
