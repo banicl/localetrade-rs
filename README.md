@@ -7,7 +7,7 @@
 1.0
 
 ## 🚀 Key Features
-- 👥 Separate Portals for Buyers 🧑‍🌾 and Sellers 🛍️
+- 👥 Separate Portals for Buyers 🧑‍🌾 and Sellers 🐄
 - 🌐 Real-time Updates 📡 and Notifications 🔔
 - 📊 User-friendly Seller Dashboard 📋
 - 🖼️ Aesthetic UI Design 🎨
@@ -17,7 +17,7 @@
 - MongoDB 🗄️
 
 ## 📚 Usage Instructions 📘
-1. Register as a buyer 🧑‍🌾 or seller 🛍️.
+1. Register as a buyer 🧑‍🌾 or seller 🐖.
 2. Explore the marketplace for unique homemade products 🥒🍯.
 3. For sellers, list and manage your products 📝 easily.
 
