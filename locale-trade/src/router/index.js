@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import WelcomePage from '../components/WelcomePage.vue';
-import LoginPage from '../components/LoginPage.vue';      // Import LoginPage
-import RegisterPage from '../components/RegisterPage.vue'; // Import RegisterPage
+import LoginPage from '../components/LoginPage.vue';
+import RegisterPage from '../components/RegisterPage.vue'; 
+import MenuPage from '../components/MenuPage.vue'; 
+
 
 const routes = [
   {
@@ -12,12 +14,17 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: LoginPage // Add this route
+    component: LoginPage 
   },
   {
     path: '/register',
     name: 'Register',
-    component: RegisterPage // Add this route
+    component: RegisterPage 
+  },
+  {
+    path: '/menu',
+    name: 'MenuPage',
+    component: MenuPage 
   },
   // ... other routes ...
 ];

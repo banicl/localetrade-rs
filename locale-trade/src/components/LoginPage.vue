@@ -17,9 +17,9 @@
     <div class="content">
       <form class="login-form">
         <img src="@/assets/login.svg" alt="Title" class="title-image" />
-        <input type="text" placeholder="Username 🌽" required>
-        <input type="password" placeholder="Password 🌾" required>
-        <button type="submit">✨ SIGN IN ✨</button><br>
+        <input type="text" placeholder="Username 🌽" v-model="username" required>
+        <input type="password" placeholder="Password 🌾" v-model="password" required>
+        <button type="button" @click="submitLogin">✨ SIGN IN ✨</button>
         <p class="register-link">Not yet registered? 👨🏻‍🌾 Sign up for free.<br><a href="#" @click="goToRegister">Create an account!</a></p>
       </form>
     </div>
@@ -32,10 +32,15 @@
 </template>
 
 <script>
+
+import axios from 'axios';
+
 export default {
   name: 'LoginPage',
   data() {
     return {
+      username: '',
+      password: '',
       currentDate: '',
     };
   },
@@ -48,7 +53,19 @@ export default {
     },
     updateDate() {
       this.currentDate = new Date().toLocaleDateString();
+    },
+    async submitLogin() {
+    try {
+      const response = await axios.post('http://localhost:3000/login', {
+        username: this.username,
+        password: this.password
+      });
+      console.log('Login successful', response);
+      this.$router.push('/menu');
+    } catch (error) {
+      console.error('Login failed', error);
     }
+  },
   },
   mounted() {
     this.updateDate();

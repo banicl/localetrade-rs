@@ -19,10 +19,9 @@
         <img src="@/assets/register.svg" alt="Register" class="title-image" />
        
         <div class="input-row">
-          <input type="text" placeholder="Username 🌽" required>
-          <input type="text" placeholder="Email 🥕" required>
+          <input type="text" placeholder="Username 🌽" v-model="username" required>
+          <input type="text" placeholder="Email 🥕" v-model="email" required>
         </div>
-
         <div class="input-row">
           <input type="password" placeholder="Password 🌾" v-model="password" required>
           <input type="password" placeholder="Confirm Password 🥬" v-model="confirmPassword" required>
@@ -30,7 +29,7 @@
         <p v-if="password && confirmPassword && !isPasswordValid" class="password-warning">
           Passwords do not match.
         </p>
-        <button type="submit" :disabled="!isPasswordValid">✨ SIGN UP ✨</button><br>
+        <button type="button" @click="submitRegister" :disabled="!isPasswordValid">✨ SIGN UP ✨</button>
         <p class="register-link">Already have an account? 👨🏻‍🌾 Log in.<br><a href="#" @click="goToLogin">Log in here!</a></p>
       </form>
     </div>
@@ -43,11 +42,16 @@
 </template>
 
 <script>
+
+import axios from 'axios';
+
 export default {
   name: 'RegisterPage',
   data() {
     return {
       currentDate: '',
+      username: '',
+      email: '',
       password: '',
       confirmPassword: '',
     };
@@ -66,7 +70,22 @@ export default {
     },
     updateDate() {
       this.currentDate = new Date().toLocaleDateString();
+    },
+    async submitRegister() {
+    if (this.isPasswordValid) {
+      try {
+        const response = await axios.post('http://localhost:3000/register', {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        });
+        console.log('Registration successful', response);
+        this.$router.push('/login');
+      } catch (error) {
+        console.error('Registration failed', error);
+      }
     }
+  }
   },
   mounted() {
     this.updateDate();
