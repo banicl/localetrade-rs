@@ -3,7 +3,9 @@ import WelcomePage from '../components/WelcomePage.vue';
 import LoginPage from '../components/LoginPage.vue';
 import RegisterPage from '../components/RegisterPage.vue'; 
 import MenuPage from '../components/MenuPage.vue'; 
-
+import ProductList from '../components/ProductList.vue';
+import NewsPage from '../components/NewsPage.vue'; 
+import ProfilePage from '../components/ProfilePage.vue';
 
 const routes = [
   {
@@ -26,7 +28,22 @@ const routes = [
     name: 'MenuPage',
     component: MenuPage 
   },
-  // ... other routes ...
+  {
+    path: '/products/:categoryId',
+    name: 'Products',
+    component: ProductList,
+    props: true
+  },
+  {
+    path: '/newspage',
+    name: 'NewsPage',
+    component: NewsPage, 
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: ProfilePage,
+  },
 ];
 
 const router = createRouter({

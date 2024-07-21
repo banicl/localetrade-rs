@@ -17,7 +17,6 @@
     <div class="content">
       <form class="login-form">
         <img src="@/assets/register.svg" alt="Register" class="title-image" />
-       
         <div class="input-row">
           <input type="text" placeholder="Username 🌽" v-model="username" required>
           <input type="text" placeholder="Email 🥕" v-model="email" required>
@@ -29,7 +28,8 @@
         <p v-if="password && confirmPassword && !isPasswordValid" class="password-warning">
           Passwords do not match.
         </p>
-        <button type="button" @click="submitRegister" :disabled="!isPasswordValid">✨ SIGN UP ✨</button>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        <button type="button" @click="submitRegister" :disabled="!isPasswordValid"><b>✨ SIGN UP ✨</b></button>
         <p class="register-link">Already have an account? 👨🏻‍🌾 Log in.<br><a href="#" @click="goToLogin">Log in here!</a></p>
       </form>
     </div>
@@ -42,7 +42,6 @@
 </template>
 
 <script>
-
 import axios from 'axios';
 
 export default {
@@ -54,6 +53,7 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
+      errorMessage: '', // Add error message state
     };
   },
   computed: {
@@ -72,92 +72,94 @@ export default {
       this.currentDate = new Date().toLocaleDateString();
     },
     async submitRegister() {
-    if (this.isPasswordValid) {
-      try {
-        const response = await axios.post('http://localhost:3000/register', {
-          username: this.username,
-          email: this.email,
-          password: this.password
-        });
-        console.log('Registration successful', response);
-        this.$router.push('/login');
-      } catch (error) {
-        console.error('Registration failed', error);
+      this.errorMessage = ''; // Reset error message
+      if (this.isPasswordValid) {
+        try {
+          const response = await axios.post('http://localhost:3000/register', {
+            username: this.username,
+            email: this.email,
+            password: this.password
+          });
+          console.log('Registration successful', response);
+          this.$router.push('/login');
+        } catch (error) {
+          if (error.response && error.response.data.includes('username')) {
+            this.errorMessage = 'Username is already taken.';
+          } else if (error.response && error.response.data.includes('email')) {
+            this.errorMessage = 'Email is already taken.';
+          } else {
+            this.errorMessage = 'Registration failed. Please try again.';
+          }
+          console.error('Registration failed', error);
+        }
       }
     }
-  }
   },
   mounted() {
     this.updateDate();
     setInterval(this.updateDate, 86400000); 
   }
 }
-
 </script>
 
 <style scoped>
-
-  body {
+body {
   margin: 0;
   font-family: 'Dosis', sans-serif;
-  }
+}
 
-  .title-image {
-    max-width: 85%;
-    height: auto;
-    margin-bottom:30px;
-    background-color: transparent; 
-    display: block;
-  }
+.title-image {
+  max-width: 85%;
+  height: auto;
+  margin-bottom: 30px;
+  background-color: transparent;
+  display: block;
+}
 
-  .welcome-container, .background-image {
+.welcome-container,
+.background-image {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   height: 100vh;
-  }
+}
 
-  .welcome-container {
-    overflow: hidden;
-    padding: none;
-    margin: none;
-  }
+.welcome-container {
+  overflow: hidden;
+  padding: none;
+  margin: none;
+}
 
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); 
-    z-index: 1; 
-    }
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
 
-  .background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('@/assets/background.webp') no-repeat center center;
-    background-size: 100%;
-    filter: blur(4px);
-  }
+.background-image {
+  background: url('@/assets/background.webp') no-repeat center center;
+  background-size: cover;
+  filter: blur(4px);
+}
 
-  .content {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    text-align: center;
-    z-index: 1; 
-  }
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  z-index: 1;
+}
 
-  .navbar {
+.navbar {
     position: relative; 
     z-index: 2;
     width: 100%;
@@ -212,7 +214,7 @@ export default {
     color: #F5d826;
   }
 
-  .footer {
+.footer {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -224,20 +226,20 @@ export default {
   box-shadow: 0 -2px 5px #454545;
   font-family: 'Dosis', sans-serif;
 }
- .login-form {
-    font-family: 'Dosis', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-    background: rgba(204, 204, 204, 0.3); /* Match the navbar's color and opacity */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-bottom:200px;
-    width: 250px;
-    margin-top:60px;
-  }
 
+.login-form {
+  font-family: 'Dosis', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  background: rgba(204, 204, 204, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 200px;
+  width: 250px;
+  margin-top: 60px;
+}
 
 .login-form input {
   width: 80%;
@@ -248,32 +250,33 @@ export default {
 }
 
 .register-link {
-  margin-top: 15px; 
+  margin-top: 15px;
   color: #ccc;
 }
-.register-link a{ 
+
+.register-link a {
   color: #6ba823;
 }
 
 .login-form button {
-    width: 85%;
-    padding: 10px;
-    border: none;
-    background-color: #6ba823;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
+  width: 85%;
+  padding: 10px;
+  border: none;
+  background-color: #6ba823;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-  .login-form button:hover {
-    background-color: #F5d826;
-  }
+.login-form button:hover {
+  background-color: #f5d826;
+}
 
-  .password-warning {
+.password-warning,
+.error-message {
   color: red;
   font-size: 14px;
   margin-top: -15px;
 }
-
 </style>
