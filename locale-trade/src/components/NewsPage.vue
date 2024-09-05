@@ -20,7 +20,7 @@
         <img src="@/assets/logo-static.png" alt="Logo" class="logo-image" />
         <ul>
           <li v-for="category in categories" :key="category.id" class="category-item">
-            <router-link :to="{ name: 'Products', params: { categoryId: category.id } }">
+            <router-link :to="{ name: 'ProductList', params: { categoryId: category.id } }">
               {{ category.emoji }} {{ category.name }}
             </router-link>
           </li>
@@ -33,7 +33,7 @@
             <div class="news-content">
               <h3>{{ news.title }}</h3>
               <p>{{ news.description }}</p>
-              <a :href="news.link" target="_blank">Read more</a>
+              <a :href="news.link" target="_blank">Read more...</a>
             </div>
           </div>
         </div>
@@ -57,6 +57,11 @@
 </template>
 
 <script>
+import image1 from '@/assets/image1.jpg';
+import image2 from '@/assets/image2.jpg';
+import image3 from '@/assets/image3.jpg';
+import image4 from '@/assets/image4.jpg';
+
 export default {
   name: 'NewsPage',
   data() {
@@ -75,9 +80,10 @@ export default {
         { id: 10, name: 'Household Items', emoji: '🏠' }
       ],
       newsItems: [
-        { id: 1, title: 'The Benefits of Eating Fresh Produce', description: 'Learn about the numerous health benefits of consuming fresh fruits and vegetables.', image: '@/assets/image1.jpg', link: 'https://www.healthline.com/nutrition/20-healthiest-fruits' },
-        { id: 2, title: 'Dairy Products and Your Health', description: 'Explore the nutritional value and health benefits of including dairy products in your diet.', image: '@/assets/image2.jpg', link: 'https://www.medicalnewstoday.com/articles/323458' },
-        { id: 3, title: 'Sustainable Seafood Choices', description: 'Find out how to make sustainable seafood choices that are good for you and the planet.', image: '@/assets/image3.jpg', link: 'https://www.nrdc.org/stories/sustainable-seafood-guide' }
+        { id: 1, title: 'The Benefits of Eating Fresh Produce', description: 'Learn about the numerous health benefits of consuming fresh fruits and vegetables.', image: image1, link: 'https://www.healthline.com/nutrition/20-healthiest-fruits' },
+        { id: 2, title: 'Dairy Products and Your Health', description: 'Explore the nutritional value and health benefits of including dairy products in your diet.', image: image2, link: 'https://www.medicalnewstoday.com/articles/323458' },
+        { id: 3, title: 'Sustainable Seafood Choices', description: 'Find out how to make sustainable seafood choices that are good for you and the planet.', image: image3, link: 'https://www.nrdc.org/stories/sustainable-seafood-guide' },
+        { id: 4, title: 'Plant-Based Meat', description: 'Discover the latest advancements in plant-based meat alternatives and their impact on the food industry.', image: image4, link: 'https://www.foodnavigator.com/Article/2023/01/15/Plant-based-meat-innovation-trends-to-watch' }
       ],
       latestProducts: [
         { id: 1, name: 'Proizvod 1', description: 'Opis proizvoda 1' },
@@ -101,7 +107,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 body {
@@ -217,7 +222,7 @@ body {
   width: 20%;
   height: 100%;
   padding: 20px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 2px 0 4px #454545;
   z-index: 2;
   overflow-y: auto;
@@ -235,7 +240,7 @@ body {
 }
 
 .sidebar-categories li:hover {
-  color: #F5d826;
+  color: #6EA823;
 }
 
 .sidebar-categories a {
@@ -245,7 +250,7 @@ body {
 }
 
 .sidebar-categories a:hover {
-  color: #F5d826;
+  color: #6EA823;
 }
 
 .category-item {
@@ -264,7 +269,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px;
+  padding: 0px 20px;
 }
 
 .news-list {
@@ -273,24 +278,49 @@ body {
   gap: 20px;
 }
 
+.news-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between; /* Add this line */
+}
+
 .news-card {
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid #ddd;
   box-shadow: 0 2px 4px #454545;
-  padding: 20px;
-  flex: 1 1 calc(33% - 20px); /* Adjust card width */
+  padding: 10px;
+  flex: 0 1 calc(23% - 20px); /* Adjusted width to fit three cards */
   display: flex;
   flex-direction: column;
+  max-height: 300px;
+  transition: background-color 0.3s ease;
+}
+.news-card:hover {
+  background-color: #ddd;
 }
 
 .news-image {
   width: 100%;
   height: auto;
+  max-height: 150px;
   margin-bottom: 10px;
 }
 
 .news-content {
   flex-grow: 1;
+  overflow: hidden;
+}
+
+.news-card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.news-card p {
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .news-card h3 {
@@ -338,5 +368,6 @@ body {
   padding: none;
   margin-bottom: 10px;
 }
+
 </style>
 

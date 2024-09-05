@@ -1,8 +1,8 @@
 <template>
   <div class="products-page">
-    <h2>Proizvodi u kategoriji {{ categoryName }}</h2>
+    <h2>{{ categoryName }}</h2>
     <ul>
-      <li v-for="product in filteredProducts" :key="product.id">
+      <li v-for="product in products" :key="product._id">
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>
       </li>
@@ -11,30 +11,30 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'ProductList',
   props: ['categoryId'],
   data() {
     return {
-      categories: [
-        { id: 1, name: 'Kategorija 1' },
-        { id: 2, name: 'Kategorija 2' }
-      ],
-      products: [
-        { id: 1, name: 'Proizvod 1', description: 'Opis proizvoda 1', categoryId: 1 },
-        { id: 2, name: 'Proizvod 2', description: 'Opis proizvoda 2', categoryId: 1 },
-        { id: 3, name: 'Proizvod 3', description: 'Opis proizvoda 3', categoryId: 2 }
-      ]
+      categoryName: '',
+      products: []
     };
   },
-  computed: {
-    filteredProducts() {
-      return this.products.filter(product => product.categoryId == this.categoryId);
-    },
-    categoryName() {
-      const category = this.categories.find(category => category.id == this.categoryId);
-      return category ? category.name : 'Nepoznata kategorija';
+  methods: {
+    async fetchProducts() {
+      try {
+        const response = await axios.get(`http://localhost:3000/products/category/${this.categoryId}`);
+        this.products = response.data.products;
+        this.categoryName = response.data.categoryName;
+      } catch (error) {
+        console.error('Error fetching products', error);
+      }
     }
+  },
+  mounted() {
+    this.fetchProducts();
   }
 };
 </script>

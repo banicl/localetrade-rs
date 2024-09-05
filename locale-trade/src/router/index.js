@@ -6,6 +6,7 @@ import MenuPage from '../components/MenuPage.vue';
 import ProductList from '../components/ProductList.vue';
 import NewsPage from '../components/NewsPage.vue'; 
 import ProfilePage from '../components/ProfilePage.vue';
+import AddListing from '../components/AddListing.vue';
 
 const routes = [
   {
@@ -29,8 +30,8 @@ const routes = [
     component: MenuPage 
   },
   {
-    path: '/products/:categoryId',
-    name: 'Products',
+    path: '/category/:categoryId',
+    name: 'ProductList',
     component: ProductList,
     props: true
   },
@@ -43,6 +44,11 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: ProfilePage,
+  },
+  {
+    path: '/addlisting',
+    name: 'AddListing',
+    component: AddListing,
   },
 ];
 

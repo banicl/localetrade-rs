@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const multer = require('multer'); 
 const User = require('./models/User');
 const path = require('path'); 
+const Product = require('./models/Product');
 
 const app = express();
 app.use(express.json());
@@ -60,7 +61,7 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-
+    
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).send('User not found');
@@ -70,22 +71,73 @@ app.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(401).send('Invalid credentials');
     }
-
-    res.json({ user });
+    res.send({
+      message: 'Login successful',
+      user: {
+        username: user.username,
+        email: user.email,
+        profilePicture: user.profilePicture 
+      }
+    });
   } catch (error) {
     res.status(500).send('Error logging in user');
   }
 });
 
 app.post('/upload-profile-picture', upload.single('profilePicture'), async (req, res) => {
-  const userId = req.body.userId; // Assume userId is sent with the request
-  const profilePictureUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+  try {
+    const { username } = req.body;
+    const profilePictureUrl = `/uploads/${req.file.filename}`;
+
+    const user = await User.findOneAndUpdate({ username }, { profilePicture: profilePictureUrl }, { new: true });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    res.send({ profilePictureUrl });
+  } catch (error) {
+    res.status(500).send('Error uploading profile picture');
+  }
+});
+
+app.post('/addlisting', upload.single('image'), async (req, res) => {
+  const { name, price, location, category } = req.body; // `category` here should be the category ID
+  const image = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
-    await User.findByIdAndUpdate(userId, { profilePicture: profilePictureUrl });
-    res.json({ profilePictureUrl });
+    const newProduct = new Product({ name, price, location, category, image });
+    await newProduct.save();
+    res.status(201).send('Product added successfully');
   } catch (error) {
-    res.status(500).send('Error updating profile picture');
+    res.status(500).send('Error adding product');
+  }
+});
+
+app.get('/products/category/:categoryId', async (req, res) => {
+  try {
+    const products = await Product.find({ category: req.params.categoryId });
+    const categoryMapping = {
+      1: 'Fresh Produce',
+      2: 'Dairy Products',
+      3: 'Meat and Poultry',
+      4: 'Baked Goods',
+      5: 'Seafood',
+      6: 'Beverages',
+      7: 'Pantry Staples',
+      8: 'Snacks and Confectionery',
+      9: 'Personal Care',
+      10: 'Household Items'
+    };
+
+    const categoryName = categoryMapping[req.params.categoryId] || 'Unknown Category';
+    
+    res.json({
+      products,
+      categoryName
+    });
+  } catch (error) {
+    res.status(500).send('Error fetching products');
   }
 });
 

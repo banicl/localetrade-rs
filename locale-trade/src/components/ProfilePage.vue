@@ -16,16 +16,19 @@
     </nav>
 
     <div class="content">
-    <img src="@/assets/user-profile.gif" alt="Title" class="title-image" />
+    <h1 style="color:#6ba823; font-size:40px">USER PROFILE</h1>
       <div class="profile-container">
         <img :src="userProfilePicture" alt="Profile Picture" class="profile-picture">
         <button @click="triggerFileInput" class="edit-picture-btn"><i class="fas fa-edit"></i></button>
         <input type="file" ref="fileInput" @change="uploadProfilePicture" style="display: none;">
-        <h2 style="color:white ">🌻  {{ user.username }}  </h2>
+        <h2 style="color:white ">{{ user.username }}  </h2>
         <div class="profile-buttons">
-          <button @click="goToListedItems">Listed Items 💛</button>
-          <button @click="goToBoughtItems">Bought Items 🧡</button>
-          <button @click="goToFavoritedItems">Favorited Items ❤️</button>
+          <button @click="goToListedItems">LISTED ITEMS 💛</button>
+          <button @click="goToBoughtItems">BOUGHT ITEMS 🧡</button>
+          <button @click="goToFavoritedItems">FAVORITED ITEMS ❤️</button>
+        </div>
+        <div v-if="notificationMessage" class="notification">
+          {{ notificationMessage }}
         </div>
       </div>
     </div>
@@ -45,7 +48,8 @@ export default {
   data() {
     return {
       user: null,
-      userProfilePicture: require('@/assets/default-pic.avif'), // Default profile picture
+      userProfilePicture: require('@/assets/default-pic.avif'),
+      notificationMessage: '', 
       currentDate: ''
     };
   },
@@ -71,21 +75,34 @@ export default {
       this.$refs.fileInput.click();
     },
     async uploadProfilePicture(event) {
-      const file = event.target.files[0];
-      const formData = new FormData();
-      formData.append('profilePicture', file);
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('profilePicture', file);
+    formData.append('username', this.user.username); // Send username with the request
 
-      try {
+    try {
         const response = await axios.post('http://localhost:3000/upload-profile-picture', formData, {
-          headers: {
+        headers: {
             'Content-Type': 'multipart/form-data'
-          }
+        }
         });
         this.userProfilePicture = response.data.profilePictureUrl;
         console.log('Profile picture updated successfully', response);
-      } catch (error) {
+
+        // Update the user object in localStorage
+        this.user.profilePicture = response.data.profilePictureUrl;
+        localStorage.setItem('user', JSON.stringify(this.user));
+        
+        // Set the notification message
+        this.notificationMessage = 'Profile picture updated successfully!';
+        
+        // Clear the message after a few seconds
+        setTimeout(() => {
+        this.notificationMessage = '';
+        }, 3000);
+    } catch (error) {
         console.error('Error uploading profile picture', error);
-      }
+    }
     }
   },
   created() {
@@ -93,6 +110,7 @@ export default {
     if (userData && userData !== 'undefined') {
       try {
         this.user = JSON.parse(userData);
+        this.userProfilePicture = this.user.profilePicture || require('@/assets/default-pic.avif');
       } catch (e) {
         console.error('Error parsing user data:', e);
       }
@@ -106,6 +124,7 @@ export default {
     setInterval(this.updateDate, 86400000);
   }
 };
+
 </script>
 
 <style scoped>
@@ -262,6 +281,8 @@ body {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: 'Dosis', sans-serif;
+  font-weight: bold;
 }
 
 .profile-buttons button:hover {
@@ -279,5 +300,13 @@ body {
   background-color: rgba(204, 204, 204, 0.3);
   box-shadow: 0 -2px 5px #454545;
   font-family: 'Dosis', sans-serif;
+}
+
+.notification {
+  padding: 10px;
+  border-radius: 5px;
+  color: #6ba823;
+  font-weight: bold;
+  text-align: center;
 }
 </style>
