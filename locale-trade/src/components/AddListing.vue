@@ -28,7 +28,7 @@
             <input type="number" id="price" v-model="price" required>
           </div>
           <div class="form-group">
-            <label for="location"><b>Product Location:</b></label>
+            <label for="location"><b>Short Product Description:</b></label>
             <input type="text" id="location" v-model="location" required>
           </div>
           <div class="form-group">
@@ -102,8 +102,6 @@ export default {
         }
         });
         alert('Product added successfully!');
-        
-        // Redirect the user to the product category page
         this.$router.push({ name: 'ProductList', params: { categoryId: this.category } });
     } catch (error) {
         console.error('Error adding product', error);
