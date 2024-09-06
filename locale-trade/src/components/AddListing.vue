@@ -62,12 +62,14 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      currentUser: JSON.parse(localStorage.getItem('currentUser')),
       name: '',
       price: '',
       location: '',
       category: '',
-      image: null, 
-      imageName: '', 
+      image: null,
+      imageName: '',
+      currentDate: new Date().toLocaleDateString(),
       categories: [
         { id: 1, name: 'Fresh Produce 🍎' },
         { id: 2, name: 'Dairy Products 🧀' },
@@ -84,31 +86,47 @@ export default {
   },
   methods: {
     handleFileUpload(event) {
-    this.image = event.target.files[0];
-    this.imageName = event.target.files[0].name; 
+        this.image = event.target.files[0];
+        this.imageName = event.target.files[0].name;
+    },
+    logout() {
+      localStorage.removeItem('user');
+      this.$router.push('/login');
     },
     async submitProduct() {
-    const formData = new FormData();
-    formData.append('name', this.name);
-    formData.append('price', this.price);
-    formData.append('location', this.location);
-    formData.append('category', this.category); // Ensure this is the category ID
-    formData.append('image', this.image);
-
-    try {
-        await axios.post('http://localhost:3000/addlisting', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
+        const currentUser = JSON.parse(localStorage.getItem('user'));
+        if (!currentUser) {
+            alert('User is not logged in');
+            return;
         }
-        });
-        alert('Product added successfully!');
-        this.$router.push({ name: 'ProductList', params: { categoryId: this.category } });
-    } catch (error) {
-        console.error('Error adding product', error);
+    
+        const formData = new FormData();
+        formData.append('name', this.name);
+        formData.append('price', this.price);
+        formData.append('location', this.location);
+        formData.append('category', this.category);
+        formData.append('image', this.image);
+        formData.append('username', currentUser.username); 
+
+        try {
+            await axios.post('http://localhost:3000/addlisting', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            alert('Product added successfully!');
+            this.$router.push({ name: 'ProductList', params: { categoryId: this.category } });
+        } catch (error) {
+            console.error('Error adding product:', error);
+        }
+    },
+    },
+    mounted() {
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+        this.currentUser = JSON.parse(user);
     }
-    }   
-  }
-};
+    }};
 </script>
 
 <style scoped>

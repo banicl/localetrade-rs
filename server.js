@@ -102,16 +102,38 @@ app.post('/upload-profile-picture', upload.single('profilePicture'), async (req,
 });
 
 app.post('/addlisting', upload.single('image'), async (req, res) => {
-  const { name, price, location, category } = req.body; // `category` here should be the category ID
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
-
   try {
-    const newProduct = new Product({ name, price, location, category, image });
+    console.log('Request body:', req.body);
+    console.log('Uploaded file:', req.file);
+
+    const { name, price, location, category, username } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!name || !price || !location || !category || !username ) {
+      console.error('Missing required fields');
+      return res.status(400).send('Missing required fields');
+    }
+
+    const newProduct = new Product({
+      name,
+      price,
+      location,
+      category,
+      image,
+      username,
+    });
+
     await newProduct.save();
     res.status(201).send('Product added successfully');
   } catch (error) {
+    console.error('Error adding product:', error);
     res.status(500).send('Error adding product');
   }
+});
+
+
+app.get('/', (req, res) => {
+  res.send('API is working!');
 });
 
 app.get('/products/category/:categoryId', async (req, res) => {
@@ -138,6 +160,15 @@ app.get('/products/category/:categoryId', async (req, res) => {
     });
   } catch (error) {
     res.status(500).send('Error fetching products');
+  }
+});
+
+app.get('/latest-products', async (req, res) => {
+  try {
+    const latestProducts = await Product.find().sort({ createdAt: -1 }).limit(5); // Assuming `createdAt` is the field for listing date
+    res.json(latestProducts);
+  } catch (error) {
+    res.status(500).send('Error fetching latest products');
   }
 });
 

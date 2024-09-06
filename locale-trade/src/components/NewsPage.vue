@@ -10,6 +10,7 @@
         <a href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
       </div>
       <ul class="nav-menu">
+        <li><router-link to="/addlisting">ADD LISTING 🏡</router-link></li>
         <li><router-link to="/profile">PROFILE 🍅</router-link></li>
         <li><a href="#" @click="logout">LOGOUT 🥕</a></li>
       </ul>
@@ -38,13 +39,16 @@
           </div>
         </div>
         <div class="latest-products">
-          <h2>Najnoviji Proizvodi</h2>
-          <ul>
-            <li v-for="product in latestProducts" :key="product.id">
-              <h3>{{ product.name }}</h3>
-              <p>{{ product.description }}</p>
-            </li>
-          </ul>
+          <h2>🌾 Check Out the Latest Products 🌾</h2>
+          <div class="product-grid">
+            <div v-for="product in latestProducts" :key="product._id" class="product-card">
+              <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
+              <div class="product-info">
+                <h3>{{ product.name }} ({{ product.price }}.00€)</h3>
+                <p>{{ product.location }}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -57,6 +61,9 @@
 </template>
 
 <script>
+
+import axios from 'axios';
+
 import image1 from '@/assets/image1.jpg';
 import image2 from '@/assets/image2.jpg';
 import image3 from '@/assets/image3.jpg';
@@ -85,15 +92,20 @@ export default {
         { id: 3, title: 'Sustainable Seafood Choices', description: 'Find out how to make sustainable seafood choices that are good for you and the planet.', image: image3, link: 'https://www.nrdc.org/stories/sustainable-seafood-guide' },
         { id: 4, title: 'Plant-Based Meat', description: 'Discover the latest advancements in plant-based meat alternatives and their impact on the food industry.', image: image4, link: 'https://www.foodnavigator.com/Article/2023/01/15/Plant-based-meat-innovation-trends-to-watch' }
       ],
-      latestProducts: [
-        { id: 1, name: 'Proizvod 1', description: 'Opis proizvoda 1' },
-        { id: 2, name: 'Proizvod 2', description: 'Opis proizvoda 2' }
-      ]
+      latestProducts: [],
     };
   },
   methods: {
     updateDate() {
       this.currentDate = new Date().toLocaleDateString();
+    },
+    async fetchLatestProducts() {
+      try {
+        const response = await axios.get('http://localhost:3000/latest-products');
+        this.latestProducts = response.data;
+      } catch (error) {
+        console.error('Error fetching latest products:', error);
+      }
     },
     logout() {
       localStorage.removeItem('user');
@@ -104,11 +116,13 @@ export default {
   mounted() {
     this.updateDate();
     setInterval(this.updateDate, 86400000);
-  }
-}
+
+    this.fetchLatestProducts();
+  }}
 </script>
 
 <style scoped>
+
 body {
   margin: 0;
   font-family: 'Dosis', sans-serif;
@@ -257,7 +271,7 @@ body {
   margin: 10px 0;
   transition: color 0.3s ease;
   border-bottom: 1px solid #ddd; /* Add this line */
-  padding-bottom: 10px; /* Optional: add padding to make space for the border */
+  padding-bottom: 10px; 
 }
 
 .category-item:last-child {
@@ -338,15 +352,80 @@ body {
 }
 
 .latest-products {
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
+  background-color: white;
+  padding: 10px;
   box-shadow: 0 2px 4px #454545;
+  min-height: 500px; /* Set max height */
 }
 
-.latest-products h3 {
-  margin: 10px 0;
+.latest-products h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #6ba823;
 }
+
+.latest-products .product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px; /* Reduce the gap between cards */
+  justify-content: space-between; /* Spread them evenly */
+}
+
+.latest-products .product-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  width: 15%; /* Reduce width so four cards fit in one row */
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.latest-products .product-card:hover {
+  transform: translateY(-10px);
+}
+
+.latest-products .product-image {
+  width: 100%;
+  height: 80px; /* Smaller image size */
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.latest-products .product-info h3 {
+  font-size: 16px; /* Reduce text size */
+  margin-bottom: 5px;
+  color: #6ba823;
+}
+
+.latest-products .product-info p {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.latest-products .price {
+  font-size: 16px; /* Slightly smaller price text */
+  font-weight: bold;
+  color: #F5d826;
+}
+
+.latest-products .view-details {
+  background-color: #6ba823;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.latest-products .view-details:hover {
+  background-color: #f5d826;
+}
+
+
 
 .footer {
   position: absolute;
@@ -356,9 +435,27 @@ body {
   text-align: center;
   padding-bottom: 15px;
   z-index: 2;
-  background-color: rgba(204, 204, 204, 0.3);
+  background: url('@/assets/background-2.jpeg') no-repeat center center;
+  background-size: cover; /* Ensure the background covers the whole area */
   box-shadow: 0 -2px 5px #454545;
   font-family: 'Dosis', sans-serif;
+  overflow: hidden; /* Ensure the pseudo-element stays inside the footer */
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(000, 000, 000, 0.5); /* 50% opacity white overlay */
+  z-index: 1; /* Ensure the overlay is behind the text */
+}
+
+.footer p, .footer #current-date {
+  position: relative;
+  z-index: 2; /* Ensure the text stays above the overlay */
 }
 
 .logo-image {
