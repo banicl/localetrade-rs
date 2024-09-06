@@ -11,13 +11,22 @@
         <li><a href="#" @click="logout">LOGOUT 🥕</a></li>
       </ul>
     </nav>
-
+    <div class="search-bar">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i> <!-- Search icon -->
+        <input
+          type="text"
+          placeholder="Search products..."
+          v-model="searchTerm"
+        />
+      </div>
+    </div>
     <div class="category-header">
       <h2>{{ categoryName }}</h2>
     </div>
 
     <div class="product-grid">
-      <div v-for="product in products" :key="product._id" class="product-card">
+      <div v-for="product in filteredProducts" :key="product._id" class="product-card">
         <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
         <div class="product-info">
           <h3>{{ product.name }}</h3>
@@ -49,7 +58,16 @@ export default {
       categoryName: '',
       products: [],
       currentDate: new Date().toLocaleDateString(),
+      searchTerm: '', 
     };
+  },
+  computed: {
+    filteredProducts() {
+      return this.products.filter(product =>
+        product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        product.location.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
   },
   methods: {
     async fetchProducts() {
@@ -100,8 +118,6 @@ body {
   background-size: cover; /* Ensure the background covers the entire page */
   background-attachment: fixed;
 }
-
-
 
 .navbar {
   position: relative;
@@ -157,6 +173,41 @@ body {
 .nav-social a:hover {
   color: #F5d826;
 }
+
+.search-bar {
+  display: flex;
+  justify-content: flex-end; /* Moves the search bar to the right */
+  margin-right: 20px; /* Adjust margin to position */
+  margin-top: 10px; /* Optional: add space between menu and search */
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Rounded corners for better look */
+  padding: 5px 15px; /* Padding to make the input field look cleaner */
+  background-color: white;
+  width: 300px; /* Adjust width as needed */
+}
+
+.search-icon {
+  color: #999;
+  margin-right: 10px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+  background: none;
+}
+
+.search-bar input::placeholder {
+  color: #bbb; /* Placeholder text color */
+}
+
 
 .category-header {
   text-align: center;
