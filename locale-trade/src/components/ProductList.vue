@@ -13,6 +13,7 @@
         <li><a href="#" @click="logout">LOGOUT 🥕</a></li>
       </ul>
     </nav>
+
     <div class="search-bar">
       <div class="search-container">
         <i class="fas fa-search search-icon"></i> <!-- Search icon -->
@@ -23,9 +24,20 @@
         />
       </div>
     </div>
+
     <div class="category-header">
       <h2>{{ categoryName }}</h2>
     </div>
+
+    <nav class="category-nav">
+      <ul class="category-menu">
+        <li v-for="category in categories" :key="category.id">
+          <router-link :to="{ name: 'ProductList', params: { categoryId: category.id } }">
+            {{ category.emoji }}
+          </router-link>
+        </li>
+      </ul>
+    </nav>
 
     <div class="product-grid">
       <div v-for="product in filteredProducts" :key="product._id" class="product-card">
@@ -65,6 +77,18 @@ export default {
       currentDate: new Date().toLocaleDateString(),
       searchTerm: '', 
       userFavorites: [],
+      categories: [
+        { id: 1, name: 'Fresh Produce', emoji: '🍎' },
+        { id: 2, name: 'Dairy Products', emoji: '🧀' },
+        { id: 3, name: 'Meat and Poultry', emoji: '🍖' },
+        { id: 4, name: 'Baked Goods', emoji: '🍞' },
+        { id: 5, name: 'Seafood', emoji: '🐟' },
+        { id: 6, name: 'Beverages', emoji: '☕' },
+        { id: 7, name: 'Pantry Staples', emoji: '🍯' },
+        { id: 8, name: 'Snacks and Confectionery', emoji: '🍫' },
+        { id: 9, name: 'Personal Care', emoji: '🧼' },
+        { id: 10, name: 'Household Items', emoji: '🏠' }
+      ],
     };
   },
   computed: {
@@ -95,11 +119,9 @@ export default {
         console.error('Error fetching favorites', error);
       }
     },
-
     isFavorite(productId) {
       return this.userFavorites.some(favorite => favorite === productId);
     },
-
     async toggleFavorite(productId) {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
@@ -107,7 +129,6 @@ export default {
           productId,
           username
         });
-        
         this.userFavorites = response.data.favorites;
         localStorage.setItem('favorites', JSON.stringify(this.userFavorites));
       } catch (error) {
@@ -130,7 +151,14 @@ export default {
       this.currentDate = new Date().toLocaleDateString();
     }, 86400000);
   },
+  watch: {
+    categoryId() {
+      this.fetchProducts(); // Re-fetch products when categoryId changes
+    }
+  }
 };
+
+
 </script>
 
 <style scoped>
@@ -246,12 +274,49 @@ body {
 
 .category-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .category-header h2 {
   font-size: 36px;
   color: white;
+}
+
+.category-nav {
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+.category-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}
+
+.category-menu li {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.category-menu li a {
+  text-decoration: none;
+  color: white;
+  transition: color 0.3s ease;
+  display: inline-block; /* Add this to allow transform */
+  transition: transform 0.3s ease-in-out; /* Smooth hover transition */
+}
+
+.category-menu li a:hover {
+  color: #f5d826;
+  transform: scale(1.5); 
+  transition: transform 0.3s ease-in-out; 
+}
+
+.category-menu li a:hover {
+  color: #f5d826;
 }
 
 .product-grid {
