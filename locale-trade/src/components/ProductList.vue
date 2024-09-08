@@ -8,6 +8,8 @@
       </div>
       <ul class="nav-menu">
         <li><router-link to="/newspage">HOME 🏡</router-link></li>
+        <li><router-link to="/profile">PROFILE 🍅</router-link></li>
+        <li><router-link to="/addlisting">ADD LISTING 🍄</router-link></li>
         <li><a href="#" @click="logout">LOGOUT 🥕</a></li>
       </ul>
     </nav>
@@ -32,7 +34,10 @@
           <h3>{{ product.name }}</h3>
           <p>{{ product.location }}</p>
           <p class="price">{{ product.price }}.00€</p>
-          <button class="view-details">View Details</button>
+          <button class="add-to-cart-btn" @click="addToCart(product)">Add to Cart</button>
+          <button class="favorite-btn" @click="toggleFavorite(product)">
+            <i :class="{'fas fa-heart': isFavorite(product), 'far fa-heart': !isFavorite(product)}"></i>
+          </button>
         </div>
         <div class="product-date">
           <span>Listed by: <b>{{ product.username }}</b> on {{ formatDateTime(product.createdAt) }}</span>
@@ -59,6 +64,7 @@ export default {
       products: [],
       currentDate: new Date().toLocaleDateString(),
       searchTerm: '', 
+      userFavorites: JSON.parse(localStorage.getItem('favorites')) || []
     };
   },
   computed: {
@@ -79,6 +85,20 @@ export default {
         console.error('Error fetching products', error);
       }
     },
+    toggleFavorite(product) {
+      const favorites = this.userFavorites || [];
+      const index = favorites.indexOf(product._id);
+      if (index !== -1) {
+        favorites.splice(index, 1); 
+      } else {
+        favorites.push(product._id); 
+      }
+      this.userFavorites = favorites;
+      // Logic to persist favorite status in backend or localStorage
+    },
+    isFavorite(product) {
+      return this.userFavorites && this.userFavorites.includes(product._id);
+    },
     formatDateTime(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       return new Date(date).toLocaleDateString(undefined, options);
@@ -93,7 +113,12 @@ export default {
     setInterval(() => {
       this.currentDate = new Date().toLocaleDateString();
     }, 86400000);
-  }
+  },
+  watch: {
+    userFavorites(newFavorites) {
+      localStorage.setItem('favorites', JSON.stringify(newFavorites)); // Persist to localStorage
+    }
+  },
 };
 </script>
 
@@ -176,19 +201,19 @@ body {
 
 .search-bar {
   display: flex;
-  justify-content: flex-end; /* Moves the search bar to the right */
-  margin-right: 20px; /* Adjust margin to position */
-  margin-top: 10px; /* Optional: add space between menu and search */
+  justify-content: flex-end; 
+  margin-right: 20px; 
+  margin-top: 10px; 
 }
 
 .search-container {
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
-  border-radius: 20px; /* Rounded corners for better look */
-  padding: 5px 15px; /* Padding to make the input field look cleaner */
+  border-radius: 20px; 
+  padding: 5px 15px; 
   background-color: white;
-  width: 300px; /* Adjust width as needed */
+  width: 300px; 
 }
 
 .search-icon {
@@ -205,7 +230,7 @@ body {
 }
 
 .search-bar input::placeholder {
-  color: #bbb; /* Placeholder text color */
+  color: #bbb; 
 }
 
 
@@ -283,18 +308,45 @@ body {
   color: #F5d826;
 }
 
-.view-details {
+.product-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-to-cart-btn {
   background-color: #6ba823;
   color: white;
   border: none;
-  padding: 8px 15px;
+  padding: 8px 10px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.view-details:hover {
+.add-to-cart-btn:hover {
   background-color: #f5d826;
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  color: #f5d826;
+  transition: color 0.3s ease;
+}
+
+.favorite-btn:hover {
+  color: #6ba823;
+}
+
+.fas.fa-heart {
+  color: red; 
+}
+
+.far.fa-heart {
+  color: #ccc; /* Empty heart */
 }
 
 .product-date {

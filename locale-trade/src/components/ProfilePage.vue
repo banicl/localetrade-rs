@@ -10,8 +10,9 @@
         <a href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
       </div>
       <ul class="nav-menu">
-        <li><router-link to="/addlisting">ADD LISTING 🍄</router-link></li>
         <li><router-link to="/newspage">HOME 🏡</router-link></li>
+        <li><router-link to="/profile">PROFILE 🍅</router-link></li>
+        <li><router-link to="/addlisting">ADD LISTING 🍄</router-link></li>
         <li><a href="#" @click="logout">LOGOUT 🥕</a></li>
       </ul>
     </nav>
@@ -64,13 +65,13 @@ export default {
       this.$router.push('/login');
     },
     goToListedItems() {
-      this.$router.push('/listed-items'); // Adjust the path as necessary
+      this.$router.push('/listed-items'); 
     },
     goToBoughtItems() {
-      this.$router.push('/bought-items'); // Adjust the path as necessary
+      this.$router.push('/bought-items'); 
     },
     goToFavoritedItems() {
-      this.$router.push('/favorited-items'); // Adjust the path as necessary
+      this.$router.push('/favorited-items'); 
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
@@ -90,14 +91,11 @@ export default {
         this.userProfilePicture = response.data.profilePictureUrl;
         console.log('Profile picture updated successfully', response);
 
-        // Update the user object in localStorage
         this.user.profilePicture = response.data.profilePictureUrl;
         localStorage.setItem('user', JSON.stringify(this.user));
         
-        // Set the notification message
         this.notificationMessage = 'Profile picture updated successfully!';
         
-        // Clear the message after a few seconds
         setTimeout(() => {
         this.notificationMessage = '';
         }, 3000);
