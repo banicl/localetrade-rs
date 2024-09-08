@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
   profilePicture: {
     type: String, 
     default: '' 
-  }
+  },
+  favorites: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Product' 
+  }],
 });
 
 const User = mongoose.model('User', userSchema);

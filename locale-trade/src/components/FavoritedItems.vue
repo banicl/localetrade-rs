@@ -1,5 +1,5 @@
 <template>
-  <div class="products-page">
+  <div class="favorited-items-page">
     <nav class="navbar">
       <div class="nav-social">
         <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
@@ -13,31 +13,29 @@
         <li><a href="#" @click="logout">LOGOUT 🥕</a></li>
       </ul>
     </nav>
-    <div class="search-bar">
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i> <!-- Search icon -->
-        <input
-          type="text"
-          placeholder="Search products..."
-          v-model="searchTerm"
-        />
-      </div>
-    </div>
+
     <div class="category-header">
-      <h2>{{ categoryName }}</h2>
+      <h2>FAVORITED ITEMS ❤️</h2>
+    </div>
+
+    <div v-if="favoritedProducts.length === 0" class="no-favorites">
+      <p>There are no products in your Favorited items.</p>
+      <router-link to="/category/1">Add products to your favorites. 🍎</router-link> 
     </div>
 
     <div class="product-grid">
-      <div v-for="product in filteredProducts" :key="product._id" class="product-card">
+      <div v-for="product in favoritedProducts" :key="product._id" class="product-card">
         <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
         <div class="product-info">
           <h3>{{ product.name }}</h3>
           <p>{{ product.location }}</p>
           <p class="price">{{ product.price }}.00€</p>
-          <button class="add-to-cart-btn" @click="addToCart(product)">Add to Cart</button>
-          <button class="favorite-btn" @click="toggleFavorite(product._id)">
-            <i :class="{'fas fa-heart': isFavorite(product._id), 'far fa-heart': !isFavorite(product._id)}"></i>
-          </button>
+          <div class="product-actions">
+            <button class="add-to-cart-btn" @click="addToCart(product)">Add to Cart</button>
+            <button class="favorite-btn" @click="removeFavorite(product._id)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
         </div>
         <div class="product-date">
           <span>Listed by: <b>{{ product.username }}</b> on {{ formatDateTime(product.createdAt) }}</span>
@@ -47,7 +45,6 @@
 
     <footer class="footer">
       <p><b>&copy; 2024 🌿 LOCALE TRADE. All rights reserved.</b></p>
-      <div id="current-date"><span class="date-color"><b>{{ currentDate }}</b></span></div>
     </footer>
   </div>
 </template>
@@ -56,90 +53,65 @@
 import axios from 'axios';
 
 export default {
-  name: 'ProductList',
-  props: ['categoryId'],
+  name: 'FavoritedItems',
   data() {
     return {
-      categoryName: '',
-      products: [],
-      currentDate: new Date().toLocaleDateString(),
-      searchTerm: '', 
-      userFavorites: [],
+      favoritedProducts: [],
+      userFavorites: JSON.parse(localStorage.getItem('favorites')) || [],
     };
   },
-  computed: {
-    filteredProducts() {
-      return this.products.filter(product =>
-        product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        product.location.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-    }
-  },
   methods: {
-    async fetchProducts() {
-      try {
-        const response = await axios.get(`http://localhost:3000/products/category/${this.categoryId}`);
-        this.products = response.data.products;
-        this.categoryName = response.data.categoryName;
-      } catch (error) {
-        console.error('Error fetching products', error);
-      }
-    },
-    async fetchFavorites() {
+    async fetchFavoritedProducts() {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
         const response = await axios.get(`http://localhost:3000/user/favorites/${username}`);
-        this.userFavorites = response.data.favorites;
-        localStorage.setItem('favorites', JSON.stringify(this.userFavorites)); // Persist to localStorage
+        this.favoritedProducts = response.data.favorites;
       } catch (error) {
-        console.error('Error fetching favorites', error);
+        console.error('Error fetching favorited products', error);
       }
     },
 
-    isFavorite(productId) {
-      return this.userFavorites.some(favorite => favorite === productId);
-    },
-
-    async toggleFavorite(productId) {
+    async removeFavorite(productId) {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
-        const response = await axios.post('http://localhost:3000/user/favorites', {
+        const response = await axios.post('http://localhost:3000/user/favorites/remove', {
           productId,
           username
         });
-        
+
+        this.favoritedProducts = this.favoritedProducts.filter(product => product._id !== productId);
         this.userFavorites = response.data.favorites;
         localStorage.setItem('favorites', JSON.stringify(this.userFavorites));
+
       } catch (error) {
-        console.error('Error updating favorites', error);
+        console.error('Error removing favorite', error);
       }
     },
+
     formatDateTime(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       return new Date(date).toLocaleDateString(undefined, options);
     },
+
     logout() {
       localStorage.removeItem('user');
       this.$router.push('/login');
     }
   },
   mounted() {
-    this.fetchProducts();
-    this.fetchFavorites();
-    setInterval(() => {
-      this.currentDate = new Date().toLocaleDateString();
-    }, 86400000);
-  },
+    this.fetchFavoritedProducts();
+  }
 };
 </script>
 
 <style scoped>
+
 body {
   margin: 0;
   font-family: 'Dosis', sans-serif;
 }
 
-.products-page {
+.favorited-items-page {
   position: absolute;
   top: 0;
   right: 0;
@@ -150,7 +122,7 @@ body {
   padding: none;
   margin: none;
   font-family: 'Dosis', sans-serif;
-  background: url('@/assets/products-background.png') no-repeat center center; 
+  background: url('@/assets/favorites.png') no-repeat center center; 
   background-size: cover; 
   background-attachment: fixed;
 }
@@ -210,40 +182,6 @@ body {
   color: #F5d826;
 }
 
-.search-bar {
-  display: flex;
-  justify-content: flex-end; 
-  margin-right: 20px; 
-  margin-top: 10px; 
-}
-
-.search-container {
-  display: flex;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 20px; 
-  padding: 5px 15px; 
-  background-color: white;
-  width: 300px; 
-}
-
-.search-icon {
-  color: #999;
-  margin-right: 10px;
-}
-
-.search-bar input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 16px;
-  background: none;
-}
-
-.search-bar input::placeholder {
-  color: #bbb; 
-}
-
 .category-header {
   text-align: center;
   margin-bottom: 40px;
@@ -254,13 +192,33 @@ body {
   color: white;
 }
 
+.no-favorites {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 240px;
+  margin-bottom: 290px;
+}
+
+.no-favorites p {
+  margin-bottom: 10px;
+}
+
+.no-favorites a {
+  color: #f5d826;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.no-favorites a:hover {
+  color: rgb(205, 0, 0);
+}
+
 .product-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   justify-content: center;
 }
-
 .product-card {
   background-color: white;
   border-radius: 10px;
@@ -270,29 +228,9 @@ body {
   text-align: center;
   transition: transform 0.3s ease;
 }
-
 .product-card:hover {
   transform: translateY(-10px);
 }
-
-.user-info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.user-profile-picture {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.username {
-  font-size: 14px;
-  color: #333;
-}
-
 .product-image {
   width: 100%;
   height: 150px;
@@ -300,30 +238,20 @@ body {
   border-radius: 10px;
   margin-bottom: 10px;
 }
-
 .product-info h3 {
   font-size: 20px;
   margin-bottom: 8px;
   color: #6ba823;
 }
-
 .product-info p {
   margin-bottom: 8px;
   font-size: 16px;
 }
-
 .price {
   font-size: 18px;
   font-weight: bold;
   color: #F5d826;
 }
-
-.product-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .add-to-cart-btn {
   background-color: #6ba823;
   color: white;
@@ -338,24 +266,23 @@ body {
   background-color: #f5d826;
 }
 
-.fas.fa-heart {
-  color: red; /* Filled heart when favorited */
-}
-
-.far.fa-heart {
-  color: #ccc; /* Empty heart when unfavorited */
-}
-
 .favorite-btn {
   background: none;
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: red;
+  color: red; /* Red heart by default */
 }
 
-.favorite-btn:hover {
-  color: darkred;
+.favorite-btn:hover .fa-heart {
+  display: none;
+}
+
+.favorite-btn:hover::after {
+  content: "\f7a9";
+  font-family: "Font Awesome 5 Free"; 
+  font-weight: 900;
+  color: red;
 }
 
 .product-date {
@@ -363,18 +290,12 @@ body {
   color: rgba(0, 0, 0, 0.5);
   margin-top: 10px;
 }
-
 .footer {
-  bottom: 0;
-  width: 100%;
-  color: white;
   text-align: center;
-  padding-bottom: 15px;
-  padding-top: 15px;
-  margin-top: 15px;
-  z-index: 2;
+  padding: 15px;
   background-color: rgba(204, 204, 204, 0.3);
   box-shadow: 0 -2px 5px #454545;
   font-family: 'Dosis', sans-serif;
+  color: white;
 }
 </style>

@@ -131,6 +131,68 @@ app.post('/addlisting', upload.single('image'), async (req, res) => {
   }
 });
 
+app.post('/user/favorites', async (req, res) => {
+  const { productId, username } = req.body;
+
+  try {
+    const user = await User.findOne({ username });
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const index = user.favorites.indexOf(productId);
+
+    if (index === -1) {
+      user.favorites.push(productId);
+    } else {
+      user.favorites.splice(index, 1);
+    }
+
+    await user.save();
+    res.json({ message: 'Favorites updated successfully', favorites: user.favorites });
+
+  } catch (error) {
+    console.error('Error updating favorites', error);
+    res.status(500).json({ message: 'Error updating favorites' });
+  }
+});
+
+app.post('/user/favorites/remove', async (req, res) => {
+  const { username, productId } = req.body;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) return res.status(404).send({ message: 'User not found' });
+
+    // Remove product from favorites
+    user.favorites = user.favorites.filter(id => id.toString() !== productId);
+    await user.save();
+
+    res.status(200).send({ favorites: user.favorites });
+  } catch (error) {
+    res.status(500).send({ message: 'Error removing favorite', error });
+  }
+});
+
+
+app.get('/user/favorites/:username', async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const user = await User.findOne({ username }).populate('favorites');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ favorites: user.favorites });
+  } catch (error) {
+    console.error('Error fetching favorites', error);
+    res.status(500).json({ message: 'Error fetching favorites' });
+  }
+});
+
+
 
 app.get('/', (req, res) => {
   res.send('API is working!');
