@@ -51,8 +51,8 @@
           </p>
           <p>{{ product.location }}</p>
           <p class="price">{{ product.price }}.00€</p>
-          <button class="add-to-cart-btn" @click="addToCart(product)">Add to Cart</button>
-          <button class="favorite-btn" @click="toggleFavorite(product._id)">
+          <button class="add-to-cart-btn" @click.stop="addToCart(product)">Add to Cart</button>
+          <button class="favorite-btn" @click.stop="toggleFavorite(product._id)">
             <i :class="{'fas fa-heart': isFavorite(product._id), 'far fa-heart': !isFavorite(product._id)}"></i>
           </button>
         </div>
@@ -351,10 +351,12 @@ body {
   width: 220px;
   text-align: center;
   transition: transform 0.3s ease;
+  cursor:pointer;
 }
 
 .product-card:hover {
   transform: translateY(-10px);
+  cursor:pointer;
 }
 
 .user-info {
