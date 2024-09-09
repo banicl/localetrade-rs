@@ -52,7 +52,14 @@ app.post('/register', async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword });
+    const defaultProfilePicture = '/uploads/default-pic.avif'; // Path for default image
+
+    const user = new User({ 
+      username, 
+      email, 
+      password: hashedPassword,
+      profilePicture: defaultProfilePicture // Set default profile picture
+    });
     await user.save();
 
     res.status(201).json({ user });

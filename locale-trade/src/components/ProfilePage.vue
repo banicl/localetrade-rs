@@ -89,15 +89,12 @@ export default {
         }
       });
       
-      // Update the profile picture URL in the component
+      // Update the profile picture URL in the user data
       this.userProfilePicture = `http://localhost:3000${response.data.profilePictureUrl}?${new Date().getTime()}`;
-
-      // Save the updated profile picture URL in localStorage
-      localStorage.setItem('profilePictureUrl', this.userProfilePicture);
-
-      // Also update the user object in localStorage
+      
+      // Update the user object with the new profile picture
       this.user.profilePicture = response.data.profilePictureUrl;
-      localStorage.setItem('user', JSON.stringify(this.user));
+      localStorage.setItem('user', JSON.stringify(this.user)); // Update the entire user object
 
       this.notificationMessage = 'Profile picture updated successfully!';
       
@@ -114,9 +111,10 @@ export default {
     if (userData && userData !== 'undefined') {
       try {
         this.user = JSON.parse(userData);
-        // Check if the profile picture exists in local storage, if not use default
-        const storedProfilePicture = localStorage.getItem('profilePictureUrl');
-        this.userProfilePicture = storedProfilePicture || this.user.profilePicture || require('@/assets/default-pic.avif');
+        // Load user-specific profile picture if it exists, otherwise use default
+        this.userProfilePicture = this.user.profilePicture 
+          ? `http://localhost:3000${this.user.profilePicture}` 
+          : require('@/assets/default-pic.avif');  // Ensure the path matches where default-pic.avif is stored
       } catch (e) {
         console.error('Error parsing user data:', e);
       }
