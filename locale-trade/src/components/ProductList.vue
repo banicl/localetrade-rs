@@ -40,7 +40,7 @@
     </nav>
 
     <div class="product-grid">
-      <div v-for="product in filteredProducts" :key="product._id" class="product-card">
+      <div v-for="product in filteredProducts" :key="product._id" class="product-card" @click="goToProduct(product._id)">
         <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
         <div class="product-info">
           <h3>{{ product.name }}</h3>
@@ -134,6 +134,9 @@ export default {
       } catch (error) {
         console.error('Error updating favorites', error);
       }
+    },
+    goToProduct(productId) {
+      this.$router.push({ name: 'ProductDetails', params: { productId } });
     },
     formatDateTime(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };

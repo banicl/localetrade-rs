@@ -3,9 +3,10 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const multer = require('multer'); 
-const User = require('./models/User');
 const path = require('path'); 
+const User = require('./models/User');
 const Product = require('./models/Product');
+const Review = require('./models/Review');
 
 const app = express();
 app.use(express.json());
@@ -131,6 +132,18 @@ app.post('/addlisting', upload.single('image'), async (req, res) => {
   }
 });
 
+app.get('/products/:productId', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.productId);
+    if (!product) {
+      return res.status(404).send('Product not found');
+    }
+    res.json(product);
+  } catch (error) {
+    res.status(500).send('Error fetching product details');
+  }
+});
+
 app.post('/user/favorites', async (req, res) => {
   const { productId, username } = req.body;
 
@@ -157,6 +170,42 @@ app.post('/user/favorites', async (req, res) => {
     res.status(500).json({ message: 'Error updating favorites' });
   }
 });
+
+app.get('/reviews/:productId', async (req, res) => {
+  try {
+    const reviews = await Review.find({ productId: req.params.productId });
+    res.json({ reviews });
+    console.log('Reviews for product:', req.params.productId);
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    res.status(500).send('Error fetching reviews');
+  }
+});
+
+app.post('/reviews', async (req, res) => {
+  try {
+    const { productId, username, rating, comment } = req.body;
+    
+    if (!username || !productId || !rating || !comment) {
+      return res.status(400).send('Missing required fields');
+    }
+
+    const newReview = new Review({
+      productId,
+      username,
+      rating,
+      comment,
+    });
+
+    await newReview.save();
+    res.status(201).json({ review: newReview });
+  } catch (error) {
+    console.error('Error submitting review:', error);
+    res.status(500).send('Error adding review');
+  }
+});
+
+
 
 app.post('/user/favorites/remove', async (req, res) => {
   const { username, productId } = req.body;

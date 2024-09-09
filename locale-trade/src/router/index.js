@@ -56,6 +56,12 @@ const routes = [
     name: 'FavoritedItems',
     component: FavoritedItems,
   },  
+  {
+    path: '/product/:productId',
+    name: 'ProductDetails',
+    component: () => import('@/components/ProductDetails.vue'),
+    props: true,
+  },  
 ];
 
 const router = createRouter({
