@@ -113,6 +113,9 @@ body {
 
 .favorited-items-page {
   position: absolute;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   top: 0;
   right: 0;
   bottom: 0;
@@ -195,7 +198,7 @@ body {
 .no-favorites {
   text-align: center;
   font-size: 18px;
-  margin-top: 240px;
+  margin-top: 140px;
   margin-bottom: 290px;
 }
 
@@ -214,6 +217,7 @@ body {
 }
 
 .product-grid {
+  flex-grow: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
@@ -225,6 +229,7 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 15px;
   width: 220px;
+  height:400px;
   text-align: center;
   transition: transform 0.3s ease;
 }
@@ -291,6 +296,7 @@ body {
   margin-top: 10px;
 }
 .footer {
+  margin-top: auto;
   text-align: center;
   padding: 15px;
   background-color: rgba(204, 204, 204, 0.3);

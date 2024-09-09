@@ -16,7 +16,6 @@
         <li><a href="#" @click="logout">LOGOUT 🥕</a></li>
       </ul>
     </nav>
-
     <div class="content">
       <div class="sidebar-categories">
         <img src="@/assets/logo-static.png" alt="Logo" class="logo-image" />
@@ -29,20 +28,21 @@
         </ul>
       </div>
       <div class="main-content">
-        <div class="news-list">
-          <div class="news-card" v-for="news in newsItems" :key="news.id">
-            <img :src="news.image" alt="News Image" class="news-image">
-            <div class="news-content">
-              <h3>{{ news.title }}</h3>
-              <p>{{ news.description }}</p>
-              <a :href="news.link" target="_blank">Read more...</a>
-            </div>
-          </div>
-        </div>
+        <img src="@/assets/title.svg" alt="Title" class="title-image" />
+        
+        <!-- New Short Description -->
+        <p class="app-description">
+          Welcome to Locale Trade! 🌾 This is your go-to platform for fresh, locally grown produce 🥕, homemade goods 🍞, and sustainable living 🐝. Explore, buy, and support local farmers and artisans while enjoying the best nature has to offer! 🌱
+        </p>
+        
         <div class="latest-products">
-          <h2>🌾 Check Out the Latest Products 🌾</h2>
+          <h2>🌻 CHECK OUT THE LATEST PRODUCTS 🌻</h2>
           <div class="product-grid">
-            <div v-for="product in latestProducts" :key="product._id" class="product-card">
+            <div
+              v-for="product in latestProducts"
+              :key="product._id"
+              class="product-card"
+              @click="goToCategory(product.categoryId)">
               <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
               <div class="product-info">
                 <h3>{{ product.name }} ({{ product.price }}.00€)</h3>
@@ -53,7 +53,6 @@
         </div>
       </div>
     </div>
-
     <footer class="footer">
       <p><b>&copy; 2024 🌿 LOCALE TRADE. All rights reserved.</b></p>
       <div id="current-date"><span class="date-color"><b>{{ currentDate }}</b></span></div>
@@ -88,8 +87,8 @@ export default {
         { id: 10, name: 'Household Items', emoji: '🏠' }
       ],
       newsItems: [
-        { id: 1, title: 'The Benefits of Eating Fresh Produce', description: 'Learn about the numerous health benefits of consuming fresh fruits and vegetables.', image: image1, link: 'https://www.healthline.com/nutrition/20-healthiest-fruits' },
-        { id: 2, title: 'Dairy Products and Your Health', description: 'Explore the nutritional value and health benefits of including dairy products in your diet.', image: image2, link: 'https://www.medicalnewstoday.com/articles/323458' },
+        { id: 1, title: 'Benefits of Eating Fresh', description: 'Learn about the numerous health benefits of consuming fresh home-grown fruits and vegetables.', image: image1, link: 'https://www.healthline.com/nutrition/20-healthiest-fruits' },
+        { id: 2, title: 'Dairy Products and Health', description: 'Explore the nutritional value and health benefits of including dairy products in your diet.', image: image2, link: 'https://www.medicalnewstoday.com/articles/323458' },
         { id: 3, title: 'Sustainable Seafood Choices', description: 'Find out how to make sustainable seafood choices that are good for you and the planet.', image: image3, link: 'https://www.nrdc.org/stories/sustainable-seafood-guide' },
         { id: 4, title: 'Plant-Based Meat', description: 'Discover the latest advancements in plant-based meat alternatives and their impact on the food industry.', image: image4, link: 'https://www.foodnavigator.com/Article/2023/01/15/Plant-based-meat-innovation-trends-to-watch' }
       ],
@@ -103,10 +102,20 @@ export default {
     async fetchLatestProducts() {
       try {
         const response = await axios.get('http://localhost:3000/latest-products');
-        this.latestProducts = response.data;
+        this.latestProducts = response.data.map(product => ({
+          ...product,
+          categoryId: product.categoryId || 1 // Fallback in case categoryId is missing
+        }));
       } catch (error) {
         console.error('Error fetching latest products:', error);
       }
+    },
+    goToCategory(categoryId) {
+      if (!categoryId) {
+        console.error("Missing categoryId");
+        return;
+      }
+      this.$router.push({ name: 'ProductList', params: { categoryId } });
     },
     logout() {
       localStorage.removeItem('user');
@@ -127,6 +136,24 @@ export default {
 body {
   margin: 0;
   font-family: 'Dosis', sans-serif;
+}
+
+.title-image {
+  margin-top: 100px ;
+  margin-left: 50px ;
+  margin-right: 100px ;
+  width: 90%;
+  display: block;
+}
+
+.app-description {
+  text-align: center;
+  font-size: 18px;
+  color: white;
+  margin: 20px 0;
+  line-height: 1.6;
+  padding: 0 50px;
+  margin-bottom:60px;
 }
 
 .news-page, .background-image {
@@ -271,12 +298,12 @@ body {
 .category-item {
   margin: 10px 0;
   transition: color 0.3s ease;
-  border-bottom: 1px solid #ddd; /* Add this line */
+  border-bottom: 1px solid #ddd; 
   padding-bottom: 10px; 
 }
 
 .category-item:last-child {
-  border-bottom: none; /* Remove the border from the last item */
+  border-bottom: none; 
 }
 
 .main-content {
@@ -287,76 +314,28 @@ body {
   padding: 0px 20px;
 }
 
-.news-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.news-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-between; /* Add this line */
-}
-
-.news-card {
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 4px #454545;
-  padding: 10px;
-  flex: 0 1 calc(23% - 20px); /* Adjusted width to fit three cards */
-  display: flex;
-  flex-direction: column;
-  max-height: 300px;
+.read-more-btn {
+  display: inline-block;
+  background-color: #6ba823;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
   transition: background-color 0.3s ease;
 }
-.news-card:hover {
-  background-color: #ddd;
-}
 
-.news-image {
-  width: 100%;
-  height: auto;
-  max-height: 150px;
-  margin-bottom: 10px;
-}
-
-.news-content {
-  flex-grow: 1;
-  overflow: hidden;
-}
-
-.news-card h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 18px;
-}
-
-.news-card p {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.news-card h3 {
-  margin-top: 0;
-}
-
-.news-card a {
-  color: #6ba823;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.news-card a:hover {
-  color: #F5d826;
+.read-more-btn:hover {
+  background-color: #f5d826;
 }
 
 .latest-products {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 10px;
   box-shadow: 0 2px 4px #454545;
   min-height: 500px; /* Set max height */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
 .latest-products h2 {
@@ -369,21 +348,23 @@ body {
 .latest-products .product-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 2px; /* Reduce the gap between cards */
-  justify-content: space-between; /* Spread them evenly */
+  gap: 2px;
+  justify-content: space-between; 
 }
 
 .latest-products .product-card {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.0);
   border-radius: 10px;
   padding: 15px;
-  width: 15%; /* Reduce width so four cards fit in one row */
+  width: 15%; 
   text-align: center;
   transition: transform 0.3s ease;
+  cursor: pointer; /* Add this line to change cursor on hover */
 }
 
 .latest-products .product-card:hover {
   transform: translateY(-10px);
+  cursor: pointer; /* This ensures the pointer shows when hovering */
 }
 
 .latest-products .product-image {
@@ -407,7 +388,7 @@ body {
 }
 
 .latest-products .price {
-  font-size: 16px; /* Slightly smaller price text */
+  font-size: 16px; 
   font-weight: bold;
   color: #F5d826;
 }
@@ -425,8 +406,6 @@ body {
 .latest-products .view-details:hover {
   background-color: #f5d826;
 }
-
-
 
 .footer {
   position: absolute;

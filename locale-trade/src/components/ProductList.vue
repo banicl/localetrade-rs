@@ -162,6 +162,7 @@ export default {
 </script>
 
 <style scoped>
+
 body {
   margin: 0;
   font-family: 'Dosis', sans-serif;
@@ -173,7 +174,7 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  height: 100vh;
+  min-height: 100vh;
   overflow: auto;
   padding: none;
   margin: none;
@@ -184,13 +185,10 @@ body {
 }
 
 .navbar {
-  position: relative;
-  z-index: 2;
   width: 100%;
   background-color: rgba(204, 204, 204, 0.3);
   box-shadow: 0 2px 4px #454545;
   padding: 10px 0;
-  margin: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
