@@ -30,7 +30,6 @@
       <div class="main-content">
         <img src="@/assets/title.svg" alt="Title" class="title-image" />
         
-        <!-- New Short Description -->
         <p class="app-description">
           Welcome to Locale Trade! 🌾 This is your go-to platform for fresh, locally grown produce 🥕, homemade goods 🍞, and sustainable living 🐝. Explore, buy, and support local farmers and artisans while enjoying the best nature has to offer! 🌱
         </p>
@@ -42,10 +41,14 @@
               v-for="product in latestProducts"
               :key="product._id"
               class="product-card"
-              @click="goToCategory(product.categoryId)">
+              @click="goToProduct(product._id)">
               <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
               <div class="product-info">
                 <h3>{{ product.name }} ({{ product.price }}.00€)</h3>
+                <p v-if="product.averageRating !== 'No ratings'" style="color:gray; ">
+                  <i class="fas fa-star"></i> <b>{{ product.averageRating }} / 5</b>
+                </p>
+                <p v-else>No ratings</p>
                 <p>{{ product.location }}</p>
               </div>
             </div>
@@ -102,20 +105,30 @@ export default {
     async fetchLatestProducts() {
       try {
         const response = await axios.get('http://localhost:3000/latest-products');
-        this.latestProducts = response.data.map(product => ({
-          ...product,
-          categoryId: product.categoryId || 1 // Fallback in case categoryId is missing
-        }));
+        this.latestProducts = await Promise.all(
+          response.data.map(async product => {
+            // Fetch the reviews for each product
+            const reviewsResponse = await axios.get(`http://localhost:3000/reviews/${product._id}`);
+            const reviews = reviewsResponse.data.reviews;
+
+            // Calculate the average rating
+            const averageRating = reviews.length
+              ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
+              : 'No ratings';
+
+            return {
+              ...product,
+              averageRating, // Add the average rating to the product data
+              categoryId: product.categoryId || 1, // Fallback in case categoryId is missing
+            };
+          })
+        );
       } catch (error) {
         console.error('Error fetching latest products:', error);
       }
     },
-    goToCategory(categoryId) {
-      if (!categoryId) {
-        console.error("Missing categoryId");
-        return;
-      }
-      this.$router.push({ name: 'ProductList', params: { categoryId } });
+    goToProduct(productId) {
+      this.$router.push({ name: 'ProductDetails', params: { productId } });
     },
     logout() {
       localStorage.removeItem('user');
@@ -139,7 +152,7 @@ body {
 }
 
 .title-image {
-  margin-top: 100px ;
+  margin-top: 80px ;
   margin-left: 50px ;
   margin-right: 100px ;
   width: 90%;
@@ -184,6 +197,16 @@ body {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5); 
   z-index: 1; 
+}
+
+.product-info .fa-star {
+  color: #f5d826; 
+  margin-right: 5px;
+}
+
+.product-info p {
+  font-size: 14px;
+  color: #333;
 }
 
 .background-image {

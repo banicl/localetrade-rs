@@ -44,6 +44,11 @@
         <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
         <div class="product-info">
           <h3>{{ product.name }}</h3>
+          <p v-if="product.averageRating !== null">
+            <i v-for="n in Math.floor(product.averageRating)" :key="n" class="fa fa-star"></i>
+            <i v-if="product.averageRating % 1 !== 0" class="fa fa-star-half-alt"></i>
+            <span class="rating-number">{{ product.averageRating }}</span>
+          </p>
           <p>{{ product.location }}</p>
           <p class="price">{{ product.price }}.00€</p>
           <button class="add-to-cart-btn" @click="addToCart(product)">Add to Cart</button>
@@ -185,6 +190,17 @@ body {
   background: url('@/assets/products-background.png') no-repeat center center; 
   background-size: cover; 
   background-attachment: fixed;
+}
+
+.rating-number {
+  font-size: 14px;
+  color: gray;
+  margin-left: 5px;
+}
+
+.fa-star, .fa-star-half-alt {
+  color: #f5d826;
+  font-size: 14px;
 }
 
 .navbar {

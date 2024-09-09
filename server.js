@@ -250,6 +250,16 @@ app.get('/', (req, res) => {
 app.get('/products/category/:categoryId', async (req, res) => {
   try {
     const products = await Product.find({ category: req.params.categoryId });
+    
+    const productsWithRatings = await Promise.all(products.map(async (product) => {
+      const reviews = await Review.find({ productId: product._id });
+      const averageRating = reviews.length > 0
+        ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
+        : null;
+
+      return { ...product._doc, averageRating };
+    }));
+
     const categoryMapping = {
       1: 'Fresh Produce',
       2: 'Dairy Products',
@@ -266,7 +276,7 @@ app.get('/products/category/:categoryId', async (req, res) => {
     const categoryName = categoryMapping[req.params.categoryId] || 'Unknown Category';
     
     res.json({
-      products,
+      products: productsWithRatings,
       categoryName
     });
   } catch (error) {
