@@ -83,33 +83,40 @@ export default {
     formData.append('username', this.user.username); // Send username with the request
 
     try {
-        const response = await axios.post('http://localhost:3000/upload-profile-picture', formData, {
+      const response = await axios.post('http://localhost:3000/upload-profile-picture', formData, {
         headers: {
-            'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data'
         }
-        });
-        this.userProfilePicture = response.data.profilePictureUrl;
-        console.log('Profile picture updated successfully', response);
+      });
+      
+      // Update the profile picture URL in the component
+      this.userProfilePicture = `http://localhost:3000${response.data.profilePictureUrl}?${new Date().getTime()}`;
 
-        this.user.profilePicture = response.data.profilePictureUrl;
-        localStorage.setItem('user', JSON.stringify(this.user));
-        
-        this.notificationMessage = 'Profile picture updated successfully!';
-        
-        setTimeout(() => {
+      // Save the updated profile picture URL in localStorage
+      localStorage.setItem('profilePictureUrl', this.userProfilePicture);
+
+      // Also update the user object in localStorage
+      this.user.profilePicture = response.data.profilePictureUrl;
+      localStorage.setItem('user', JSON.stringify(this.user));
+
+      this.notificationMessage = 'Profile picture updated successfully!';
+      
+      setTimeout(() => {
         this.notificationMessage = '';
-        }, 3000);
+      }, 3000);
     } catch (error) {
-        console.error('Error uploading profile picture', error);
+      console.error('Error uploading profile picture', error);
     }
-    }
+  },
   },
   created() {
     const userData = localStorage.getItem('user');
     if (userData && userData !== 'undefined') {
       try {
         this.user = JSON.parse(userData);
-        this.userProfilePicture = this.user.profilePicture || require('@/assets/default-pic.avif');
+        // Check if the profile picture exists in local storage, if not use default
+        const storedProfilePicture = localStorage.getItem('profilePictureUrl');
+        this.userProfilePicture = storedProfilePicture || this.user.profilePicture || require('@/assets/default-pic.avif');
       } catch (e) {
         console.error('Error parsing user data:', e);
       }

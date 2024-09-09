@@ -9,6 +9,8 @@ const Product = require('./models/Product');
 const Review = require('./models/Review');
 
 const app = express();
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:8080' 
@@ -89,7 +91,10 @@ app.post('/upload-profile-picture', upload.single('profilePicture'), async (req,
   try {
     const { username } = req.body;
     const profilePictureUrl = `/uploads/${req.file.filename}`;
-
+    
+    // Log the path for debugging
+    console.log('Saving file to:', profilePictureUrl);
+    
     const user = await User.findOneAndUpdate({ username }, { profilePicture: profilePictureUrl }, { new: true });
 
     if (!user) {
