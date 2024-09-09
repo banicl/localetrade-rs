@@ -18,7 +18,7 @@
       <div class="product-frame">
         <div class="product-meta">
           <p>Listed by: <b>{{ product.username }}</b></p>
-          <p>Listed on: {{ formatDate(product.createdAt) }}</p>
+          <p>{{ formatDate(product.createdAt) }}</p>
         </div>
 
         <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
@@ -279,7 +279,7 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   padding: 20px;
-  width: 45%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -384,7 +384,7 @@ body {
 }
 
 .add-review-section {
-  margin-top: 10px;
+  margin-top: 0px;
   text-align: center;
   display: flex;
   flex-direction: column;

@@ -205,8 +205,6 @@ app.post('/reviews', async (req, res) => {
   }
 });
 
-
-
 app.post('/user/favorites/remove', async (req, res) => {
   const { username, productId } = req.body;
   try {
@@ -240,8 +238,6 @@ app.get('/user/favorites/:username', async (req, res) => {
     res.status(500).json({ message: 'Error fetching favorites' });
   }
 });
-
-
 
 app.get('/', (req, res) => {
   res.send('API is working!');
@@ -292,6 +288,31 @@ app.get('/latest-products', async (req, res) => {
     res.status(500).send('Error fetching latest products');
   }
 });
+
+app.get('/products/listed/:username', async (req, res) => {
+  try {
+    const products = await Product.find({ username: req.params.username });
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching listed items' });
+  }
+});
+
+app.delete('/products/:productId', async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting product' });
+  }
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -8,6 +8,7 @@ import NewsPage from '../components/NewsPage.vue';
 import ProfilePage from '../components/ProfilePage.vue';
 import AddListing from '../components/AddListing.vue';
 import FavoritedItems from '../components/FavoritedItems.vue';
+import ListedItems from '../components/ListedItems.vue';
 
 const routes = [
   {
@@ -55,6 +56,11 @@ const routes = [
     path: '/favorited-items',
     name: 'FavoritedItems',
     component: FavoritedItems,
+  },  
+  {
+    path: '/listed-items',
+    name: 'ListedItems',
+    component: ListedItems,
   },  
   {
     path: '/product/:productId',
