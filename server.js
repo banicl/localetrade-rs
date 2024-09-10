@@ -310,6 +310,141 @@ app.get('/products/listed/:username', async (req, res) => {
   }
 });
 
+app.post('/mark-as-read', async (req, res) => {
+  const { username } = req.body;
+  try {
+    await Chat.updateMany(
+      { receiver: username, isRead: false },
+      { $set: { isRead: true } }
+    );
+    res.status(200).send('Messages marked as read');
+  } catch (error) {
+    res.status(500).send('Error marking chat as read');
+  }
+});
+
+app.get('/last-conversations/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const lastConversations = await Chat.aggregate([
+      {
+        $match: {
+          $or: [{ sender: username }, { receiver: username }]
+        }
+      },
+      {
+        $sort: { timestamp: -1 }
+      },
+      {
+        $group: {
+          _id: {
+            $cond: { if: { $eq: ['$sender', username] }, then: '$receiver', else: '$sender' }
+          },
+          lastMessage: { $first: '$message' },
+          lastDate: { $first: '$timestamp' },
+          unread: { $first: { $cond: [{ $and: [{ $eq: ['$receiver', username] }, { $eq: ['$isRead', false] }] }, true, false] } }
+        }
+      }
+    ]);
+
+    const enrichedConversations = await Promise.all(
+      lastConversations.map(async (conversation) => {
+        const userInfo = await User.findOne({ username: conversation._id }).lean();
+        return {
+          otherUser: conversation._id,
+          lastMessage: conversation.lastMessage,
+          lastDate: conversation.lastDate,
+          unread: conversation.unread,
+          profilePicture: userInfo ? userInfo.profilePicture : null
+        };
+      })
+    );
+
+    res.json(enrichedConversations);
+  } catch (error) {
+    res.status(500).send('Error fetching last conversations');
+  }
+});
+
+
+app.get('/users-with-products', async (req, res) => {
+  try {
+    const users = await User.find().lean();
+
+    const usersWithProducts = await Promise.all(
+      users.map(async (user) => {
+        const products = await Product.find({ username: user.username });
+
+        const productNames = products.map((p) => p.name).join(', ');
+        
+        const allRatings = await Promise.all(
+          products.map(async (product) => {
+            const reviews = await Review.find({ productId: product._id });
+            const avgRating = reviews.length > 0
+              ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+              : 0;
+            return avgRating;
+          })
+        );
+
+        const totalAverageRating = allRatings.length > 0
+          ? (allRatings.reduce((sum, rating) => sum + rating, 0) / allRatings.length).toFixed(1)
+          : 'No ratings';
+
+        return {
+          username: user.username,
+          profilePicture: user.profilePicture,
+          productsListed: productNames.length > 0 ? productNames : 'No listings',
+          avgRating: totalAverageRating,
+        };
+      })
+    );
+
+    res.json(usersWithProducts);
+  } catch (error) {
+    res.status(500).send('Error fetching users with products');
+  }
+});
+
+const chatSchema = new mongoose.Schema({
+  sender: { type: String, required: true },
+  receiver: { type: String, required: true },
+  message: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+  isRead: { type: Boolean, default: false } 
+});
+
+const Chat = mongoose.model('Chat', chatSchema);
+
+app.get('/chat/:sender/:receiver', async (req, res) => {
+  const { sender, receiver } = req.params;
+  try {
+    const chats = await Chat.find({
+      $or: [
+        { sender, receiver },
+        { sender: receiver, receiver: sender },
+      ],
+    }).sort({ timestamp: 1 });
+
+    res.json(chats);
+  } catch (error) {
+    res.status(500).send('Error fetching chat messages');
+  }
+});
+
+app.post('/chat', async (req, res) => {
+  const { sender, receiver, message } = req.body;
+  try {
+    const chatMessage = new Chat({ sender, receiver, message });
+    await chatMessage.save();
+
+    res.status(201).json(chatMessage);
+  } catch (error) {
+    res.status(500).send('Error saving chat message');
+  }
+});
+
+
 app.delete('/products/:productId', async (req, res) => {
   try {
     const productId = req.params.productId;

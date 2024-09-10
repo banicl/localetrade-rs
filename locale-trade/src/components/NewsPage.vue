@@ -10,6 +10,7 @@
         <a href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
       </div>
       <ul class="nav-menu">
+        <li><router-link to="/chat-page">CHAT</router-link></li>
         <li><router-link to="/newspage">HOME 🏡</router-link></li>
         <li><router-link to="/profile">PROFILE 🍅</router-link></li>
         <li><router-link to="/addlisting">ADD LISTING 🍄</router-link></li>

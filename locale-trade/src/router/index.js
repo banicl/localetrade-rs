@@ -9,6 +9,7 @@ import ProfilePage from '../components/ProfilePage.vue';
 import AddListing from '../components/AddListing.vue';
 import FavoritedItems from '../components/FavoritedItems.vue';
 import ListedItems from '../components/ListedItems.vue';
+import ChatPage from '../components/ChatPage.vue';
 
 const routes = [
   {
@@ -68,6 +69,17 @@ const routes = [
     component: () => import('@/components/ProductDetails.vue'),
     props: true,
   },  
+  {
+    path: '/chat-page',
+    name: 'ChatPage',
+    component: ChatPage,
+  },  
+  {
+    path: '/chat-details/:username',
+    name: 'ChatDetails',
+    component: () => import('../components/ChatDetails.vue'), // Lazy load the component
+    props: true // Ensure the username is passed as a prop
+  },
 ];
 
 const router = createRouter({
