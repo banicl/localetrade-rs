@@ -77,8 +77,8 @@ const routes = [
   {
     path: '/chat-details/:username',
     name: 'ChatDetails',
-    component: () => import('../components/ChatDetails.vue'), // Lazy load the component
-    props: true // Ensure the username is passed as a prop
+    component: () => import('../components/ChatDetails.vue'),
+    props: true 
   },
 ];
 

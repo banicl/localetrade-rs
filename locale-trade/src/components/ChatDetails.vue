@@ -61,6 +61,8 @@ export default {
 </script>
 
 <style scoped>
+
+
 .chat-detail-page {
   padding: 20px;
 }

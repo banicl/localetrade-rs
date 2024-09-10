@@ -10,7 +10,8 @@
         <a href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
       </div>
       <ul class="nav-menu">
-        <li><router-link to="/chat-page">CHAT</router-link></li>
+        <li><router-link to="/chat-page"><i class="fas fa-comment-dots"> &nbsp;&nbsp;</i></router-link></li>
+        <li class="separator"></li>
         <li><router-link to="/newspage">HOME 🏡</router-link></li>
         <li><router-link to="/profile">PROFILE 🍅</router-link></li>
         <li><router-link to="/addlisting">ADD LISTING 🍄</router-link></li>
@@ -36,7 +37,7 @@
         </p>
         
         <div class="latest-products">
-          <h2>🌻 CHECK OUT THE LATEST PRODUCTS 🌻</h2>
+          <h2>🌻 CHECK OUT THE LATEST PRODUCTS </h2>
           <div class="product-grid">
             <div
               v-for="product in latestProducts"
@@ -150,6 +151,13 @@ export default {
 body {
   margin: 0;
   font-family: 'Dosis', sans-serif;
+}
+
+.separator {
+  border-left: 2px solid white;
+  height: 30px;
+  margin-left: 40px;
+  margin-right: 10px;
 }
 
 .title-image {
@@ -440,10 +448,10 @@ body {
   padding-bottom: 15px;
   z-index: 2;
   background: url('@/assets/background-2.jpeg') no-repeat center center;
-  background-size: cover; /* Ensure the background covers the whole area */
+  background-size: cover; 
   box-shadow: 0 -2px 5px #454545;
   font-family: 'Dosis', sans-serif;
-  overflow: hidden; /* Ensure the pseudo-element stays inside the footer */
+  overflow: hidden; 
 }
 
 .footer::before {
@@ -453,13 +461,13 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(000, 000, 000, 0.5); /* 50% opacity white overlay */
-  z-index: 1; /* Ensure the overlay is behind the text */
+  background-color: rgba(000, 000, 000, 0.5); 
+  z-index: 1; 
 }
 
 .footer p, .footer #current-date {
   position: relative;
-  z-index: 2; /* Ensure the text stays above the overlay */
+  z-index: 2; 
 }
 
 .logo-image {

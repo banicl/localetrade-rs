@@ -7,6 +7,8 @@
         <a href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
       </div>
       <ul class="nav-menu">
+        <li><router-link to="/chat-page"><i class="fas fa-comment-dots"> &nbsp;&nbsp;</i></router-link></li>
+        <li class="separator"></li>
         <li><router-link to="/newspage">HOME 🏡</router-link></li>
         <li><router-link to="/profile">PROFILE 🍅</router-link></li>
         <li><router-link to="/addlisting">ADD LISTING 🍄</router-link></li>
@@ -174,6 +176,13 @@ export default {
 body {
   margin: 0;
   font-family: 'Dosis', sans-serif;
+}
+
+.separator {
+  border-left: 2px solid white;
+  height: 30px;
+  margin-left: 40px;
+  margin-right: 10px;
 }
 
 .products-page {
