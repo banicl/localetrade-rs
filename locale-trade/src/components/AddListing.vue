@@ -46,7 +46,7 @@
           <div class="form-group">
             <label for="file-input" class="custom-file-label">Choose File</label>
             <input type="file" id="file-input" @change="handleFileUpload" style="display: none;">
-            <p v-if="imageName" style="color:white">Odabrana slika: {{ imageName }}</p> <!-- Display the file name -->
+            <p v-if="imageName" style="color:white">Image selected: {{ imageName }}</p> <!-- Display the file name -->
           </div>
           <button type="submit">Add Product</button>
         </form>
