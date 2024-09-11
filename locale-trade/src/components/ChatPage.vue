@@ -45,7 +45,7 @@
         <p>You don't have any previous conversations. Start one now!</p>
       </div>
 
-      <h1 class="section-title" style="color:#6EA823;">USERS 🟢</h1>
+      <h1 class="section-title">USERS 🪶</h1>
       <div class="search-bar">
         <div class="search-container">
             <i class="fas fa-search search-icon"></i> 
@@ -129,6 +129,10 @@ export default {
     },
     updateDate() {
       this.currentDate = new Date().toLocaleDateString();
+    },
+    logout() {
+      localStorage.removeItem('user');
+      this.$router.push('/login');
     }
   },
   created() {
@@ -169,7 +173,7 @@ body {
   padding: none;
   margin: none;
   font-family: 'Dosis', sans-serif;
-  background: url('@/assets/farmers.png') no-repeat center center;
+  background: url('@/assets/products-background.png') no-repeat center center;
   background-size: cover;
   background-attachment: fixed;
 }

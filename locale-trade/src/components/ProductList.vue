@@ -18,7 +18,7 @@
 
     <div class="search-bar">
       <div class="search-container">
-        <i class="fas fa-search search-icon"></i> <!-- Search icon -->
+        <i class="fas fa-search search-icon"></i> 
         <input
           type="text"
           placeholder="Search products..."
@@ -53,7 +53,7 @@
           </p>
           <p>{{ product.location }}</p>
           <p class="price">{{ product.price }}.00€</p>
-          <button class="add-to-cart-btn" @click.stop="addToCart(product)">Add to Cart</button>
+          <button class="contact-seller-btn" @click.stop="contactSeller(product.username)">Contact Seller</button>
           <button class="favorite-btn" @click.stop="toggleFavorite(product._id)">
             <i :class="{'fas fa-heart': isFavorite(product._id), 'far fa-heart': !isFavorite(product._id)}"></i>
           </button>
@@ -144,6 +144,9 @@ export default {
     },
     goToProduct(productId) {
       this.$router.push({ name: 'ProductDetails', params: { productId } });
+    },
+    contactSeller(sellerUsername) {
+      this.$router.push({ name: 'ChatDetails', params: { username: sellerUsername } });
     },
     formatDateTime(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -417,7 +420,7 @@ body {
   align-items: center;
 }
 
-.add-to-cart-btn {
+.contact-seller-btn {
   background-color: #6ba823;
   color: white;
   border: none;
@@ -427,7 +430,7 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.add-to-cart-btn:hover {
+.contact-seller-btn:hover {
   background-color: #f5d826;
 }
 

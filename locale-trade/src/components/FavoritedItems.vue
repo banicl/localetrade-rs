@@ -15,7 +15,9 @@
         <li><a href="#" @click="logout">LOGOUT 🥕</a></li>
       </ul>
     </nav>
-
+    <button @click="goBack" class="back-button">
+        <i class="fas fa-arrow-left"></i> 
+    </button>
     <div class="category-header">
       <h2>FAVORITED ITEMS ❤️</h2>
     </div>
@@ -89,10 +91,12 @@ export default {
         console.error('Error removing favorite', error);
       }
     },
-
     formatDateTime(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       return new Date(date).toLocaleDateString(undefined, options);
+    },
+    goBack() {
+      this.$router.go(-1); 
     },
 
     logout() {
@@ -313,4 +317,25 @@ body {
   font-family: 'Dosis', sans-serif;
   color: white;
 }
+
+.back-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: white;
+  transition: color 0.3s ease;
+  position: absolute;
+  top: 80px;
+  left: 40px;
+}
+
+.back-button:hover {
+  color: #f5d826;
+}
+
+.back-button i {
+  font-size: 30px;
+}
+
 </style>

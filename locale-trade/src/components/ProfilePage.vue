@@ -28,8 +28,7 @@
         <h2 style="color:white ">{{ user.username }}  </h2>
         <div class="profile-buttons">
           <button @click="goToListedItems">LISTED ITEMS 💛</button>
-          <button @click="goToBoughtItems">BOUGHT ITEMS 🧡</button>
-          <button @click="goToFavoritedItems">FAVORITED ITEMS ❤️</button>
+          <button @click="goToFavoritedItems">FAVORITED ITEMS 🧡</button>
         </div>
         <div v-if="notificationMessage" class="notification">
           {{ notificationMessage }}
@@ -69,9 +68,6 @@ export default {
     goToListedItems() {
       this.$router.push('/listed-items'); 
     },
-    goToBoughtItems() {
-      this.$router.push('/bought-items'); 
-    },
     goToFavoritedItems() {
       this.$router.push('/favorited-items'); 
     },
@@ -91,10 +87,8 @@ export default {
         }
       });
       
-      // Update the profile picture URL in the user data
       this.userProfilePicture = `http://localhost:3000${response.data.profilePictureUrl}?${new Date().getTime()}`;
       
-      // Update the user object with the new profile picture
       this.user.profilePicture = response.data.profilePictureUrl;
       localStorage.setItem('user', JSON.stringify(this.user)); // Update the entire user object
 
@@ -113,10 +107,9 @@ export default {
     if (userData && userData !== 'undefined') {
       try {
         this.user = JSON.parse(userData);
-        // Load user-specific profile picture if it exists, otherwise use default
         this.userProfilePicture = this.user.profilePicture 
           ? `http://localhost:3000${this.user.profilePicture}` 
-          : require('@/assets/default-pic.avif');  // Ensure the path matches where default-pic.avif is stored
+          : require('@/assets/default-pic.avif');  
       } catch (e) {
         console.error('Error parsing user data:', e);
       }
