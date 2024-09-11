@@ -32,9 +32,9 @@
       <div class="main-content">
         <img src="@/assets/title.svg" alt="Title" class="title-image" />
         
-        <p class="app-description">
+        <p class="app-description"><b>
           Welcome to Locale Trade! 🌾 This is your go-to platform for fresh, locally grown produce 🥕, homemade goods 🍞, and sustainable living 🐝. Explore, buy, and support local farmers and artisans while enjoying the best nature has to offer! 🌱
-        </p>
+        </b></p>
         
         <div class="latest-products">
           <h2>🌻 CHECK OUT THE LATEST PRODUCTS </h2>

@@ -89,6 +89,10 @@ export default {
     goBack() {
       this.$router.go(-1); 
     },
+    logout() {
+      localStorage.removeItem('user');
+      this.$router.push('/login');
+    },
   },
   mounted() {
     this.fetchListedProducts();
@@ -289,7 +293,7 @@ body {
 }
 
 .footer {
-  margin-top: auto;
+  margin-top: 15px;
   text-align: center;
   padding: 15px;
   background-color: rgba(204, 204, 204, 0.3);

@@ -309,7 +309,7 @@ body {
   margin-top: 10px;
 }
 .footer {
-  margin-top: auto;
+  margin-top: 15px;
   text-align: center;
   padding: 15px;
   background-color: rgba(204, 204, 204, 0.3);
