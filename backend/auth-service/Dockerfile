@@ -1,20 +1,23 @@
-# Use the Node.js 16 base image
-FROM node:16
+# Use Node.js as the base image
+FROM node:20.10.0
 
-# Create app directory
+# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the app source code to the working directory
+# Rebuild bcrypt to match the Docker environment
+RUN npm rebuild bcrypt --build-from-source
+
+# Copy the rest of the application code
 COPY . .
 
-# Expose the port
+# Expose the service's port
 EXPOSE 3001
 
-# Start the auth service
-CMD ["node", "server.js"]
+# Start the service
+CMD ["npm", "start"]

@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const authRoutes = require('./routes'); // Import the routes
+const bcrypt = require('bcrypt');
+
 
 const app = express();
 
@@ -33,8 +35,10 @@ mongoose.connect('mongodb://mongo:27017/localetrade', {
 });
 
 // Routes for authentication
-app.use('/auth', authRoutes);
+app.use('/', authRoutes);
 
 // Start the Auth Service
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Auth Service running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Auth Service running on port ${PORT}`);
+});
