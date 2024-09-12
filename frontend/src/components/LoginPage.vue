@@ -58,7 +58,7 @@ export default {
     async submitLogin() {
       this.errorMessage = ''; // Reset error message
       try {
-        const response = await axios.post('http://localhost:3000/login', {
+        const response = await axios.post('http://localhost:3001/login', {
           username: this.username,
           password: this.password
         });

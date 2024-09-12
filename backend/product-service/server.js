@@ -10,7 +10,7 @@ app.use(cors({
 }));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://mongo:27017/localetrade', {
+mongoose.connect('mongodb+srv://lbanic:<db_password>@cluster0.cju9yiw.mongodb.net/', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });

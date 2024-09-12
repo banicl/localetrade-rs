@@ -29,7 +29,7 @@ const upload = multer({ storage: storage });
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://mongo:27017/localetrade', {
+mongoose.connect('mongodb+srv://lbanic:nCnGU4k6@cluster0.cju9yiw.mongodb.net/?retryWrites=true&w=majority/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });

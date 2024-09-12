@@ -75,7 +75,7 @@ export default {
       this.errorMessage = ''; // Reset error message
       if (this.isPasswordValid) {
         try {
-          const response = await axios.post('http://localhost:3000/register', {
+          const response = await axios.post('http://localhost:3001/register', {
             username: this.username,
             email: this.email,
             password: this.password
