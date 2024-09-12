@@ -1,21 +1,33 @@
 version: '3'
 services:
-  backend:
-    build: ./backend
+  auth-service:
+    build: ./auth-service
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
       - MONGO_URI=mongodb://mongo:27017/localetrade
     depends_on:
       - mongo
     restart: always
 
-  frontend:
-    build: ./frontend
+  product-service:
+    build: ./product-service
     ports:
-      - "8080:3000"
+      - "3002:3002"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/localetrade
     depends_on:
-      - backend
+      - mongo
+    restart: always
+
+  chat-service:
+    build: ./chat-service
+    ports:
+      - "3003:3003"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/localetrade
+    depends_on:
+      - mongo
     restart: always
 
   mongo:
@@ -24,4 +36,14 @@ services:
       - "27017:27017"
     volumes:
       - ./mongo-data:/data/db
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - product-service
+      - chat-service
     restart: always
