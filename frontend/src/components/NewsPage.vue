@@ -44,7 +44,7 @@
               :key="product._id"
               class="product-card"
               @click="goToProduct(product._id)">
-              <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
+              <img :src="`http://localhost:3001/uploads/${product.image}`" alt="Product Image" class="product-image">
               <div class="product-info">
                 <h3>{{ product.name }} ({{ product.price }}.00€)</h3>
                 <p v-if="product.averageRating !== 'No ratings'" style="color:gray; ">

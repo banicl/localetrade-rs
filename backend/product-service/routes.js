@@ -22,4 +22,7 @@ router.get('/products/:productId', productController.getProduct);
 // Get products by category
 router.get('/products/category/:categoryId', productController.getProductsByCategory);
 
+// Get latest products
+router.get('/latest-products', productController.getLatestProducts);
+
 module.exports = router;

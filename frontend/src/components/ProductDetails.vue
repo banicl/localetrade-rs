@@ -23,7 +23,7 @@
           <p>{{ formatDate(product.createdAt) }}</p>
         </div>
 
-        <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
+        <img :src="`http://localhost:3002${product.image}`" alt="Product Image" class="product-image">
         <div class="product-info">
           <h2>
             {{ product.name }} 
@@ -112,7 +112,7 @@ export default {
     },
     async fetchProduct() {
       try {
-        const response = await axios.get(`http://localhost:3000/products/${this.productId}`);
+        const response = await axios.get(`http://localhost:3002/products/${this.productId}`);
         this.product = response.data;
       } catch (error) {
         console.error('Error fetching product details:', error);

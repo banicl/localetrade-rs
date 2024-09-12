@@ -8,6 +8,18 @@ services:
     restart: always
     environment:
       MONGO_URI: mongodb://mongo:27017/localetrade
+    
+  product-service:
+    build: ./backend/product-service
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./backend/uploads:/usr/src/app/uploads  # Map the uploads folder
+    depends_on:
+      - mongo
+    restart: always
+    environment:
+      MONGO_URI: mongodb://mongo:27017/localetrade
 
   mongo:
     image: mongo
@@ -23,4 +35,5 @@ services:
       - "8080:3000"
     depends_on:
       - auth-service
+      - product-service
     restart: always

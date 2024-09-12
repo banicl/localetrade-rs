@@ -43,7 +43,7 @@
 
     <div class="product-grid">
       <div v-for="product in filteredProducts" :key="product._id" class="product-card" @click="goToProduct(product._id)">
-        <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
+        <img :src="`http://localhost:3002${product.image}`" alt="Product Image" class="product-image">
         <div class="product-info">
           <h3>{{ product.name }}</h3>
           <p v-if="product.averageRating !== null">
@@ -109,7 +109,7 @@ export default {
   methods: {
     async fetchProducts() {
       try {
-        const response = await axios.get(`http://localhost:3000/products/category/${this.categoryId}`);
+        const response = await axios.get(`http://localhost:3002/products/category/${this.categoryId}`);
         this.products = response.data.products;
         this.categoryName = response.data.categoryName;
       } catch (error) {

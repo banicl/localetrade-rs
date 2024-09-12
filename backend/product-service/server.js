@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path'); // Add path module
 const productRoutes = require('./routes');
 
 const app = express();
@@ -10,7 +11,7 @@ app.use(cors({
 }));
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://lbanic:<db_password>@cluster0.cju9yiw.mongodb.net/', {
+mongoose.connect('mongodb+srv://lbanic:nCnGU4k6@cluster0.cju9yiw.mongodb.net/?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -20,6 +21,9 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function() {
   console.log("Connected to MongoDB successfully!");
 });
+
+// Serve the uploads folder statically
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.use('/', productRoutes);
 

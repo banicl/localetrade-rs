@@ -113,7 +113,7 @@ export default {
         formData.append('username', currentUser.username); 
 
         try {
-            await axios.post('http://localhost:3000/addlisting', formData, {
+            await axios.post('http://localhost:3002/addlisting', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
