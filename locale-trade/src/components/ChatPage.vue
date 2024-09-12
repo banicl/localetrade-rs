@@ -61,7 +61,6 @@
           <img :src="user.profilePicture ? `http://localhost:3000${user.profilePicture}` : 'http://localhost:3000/uploads/default-pic.avif'" alt="Profile Picture" class="profile-pic">
           <div class="user-info">
             <h3>{{ user.username }}</h3>
-            <p>Products Listed: {{ user.productsListed }}</p>
             <p style="color:#6EA823;">Avg. Rating: {{ user.avgRating }}</p>
           </div>
         </div>

@@ -179,6 +179,11 @@ export default {
         console.error('Error fetching favorites:', error);
       }
     },
+    logout() {
+      localStorage.removeItem('user');
+      console.log('Logout successful');
+      this.$router.push('/login');
+    },
   },
   mounted() {
     this.fetchProduct();
