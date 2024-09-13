@@ -3,20 +3,23 @@ const Review = require('./reviewModel');
 
 exports.addProduct = async (req, res) => {
   try {
-    const { name, price, location, category, username } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+      console.log('Incoming product data:', req.body);
+      const { name, price, location, category, username } = req.body;
+      const image = req.file ? `/uploads/${req.file.filename}` : null;
 
-    if (!name || !price || !location || !category || !username) {
-      return res.status(400).send('Missing required fields');
-    }
+      if (!name || !price || !location || !category || !username) {
+          return res.status(400).send('Missing required fields');
+      }
 
-    const newProduct = new Product({ name, price, location, category, image, username });
-    await newProduct.save();
-    res.status(201).send('Product added successfully');
+      const newProduct = new Product({ name, price, location, category, image, username });
+      await newProduct.save();
+      res.status(201).send('Product added successfully');
   } catch (error) {
-    res.status(500).send('Error adding product');
+      console.error('Error adding product:', error); // Log exact error
+      res.status(500).send('Error adding product');
   }
 };
+
 
 exports.getProduct = async (req, res) => {
   try {
@@ -69,7 +72,7 @@ exports.getLatestProducts = async (req, res) => {
         const reviews = await Review.find({ productId: product._id });
         const averageRating = reviews.length > 0
           ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
-          : 'No ratings';
+          : 'No reviews';  // Assign 'No reviews' if there are no reviews
         
         return { ...product._doc, averageRating };
       })

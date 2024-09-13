@@ -98,31 +98,31 @@ export default {
       this.$router.push('/login');
     },
     async submitProduct() {
-        const currentUser = JSON.parse(localStorage.getItem('user'));
-        if (!currentUser) {
-            alert('User is not logged in');
-            return;
-        }
-    
-        const formData = new FormData();
-        formData.append('name', this.name);
-        formData.append('price', this.price);
-        formData.append('location', this.location);
-        formData.append('category', this.category);
-        formData.append('image', this.image);
-        formData.append('username', currentUser.username); 
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      if (!currentUser) {
+          alert('User is not logged in');
+          return;
+      }
 
-        try {
-            await axios.post('http://localhost:3002/addlisting', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            alert('Product added successfully!');
-            this.$router.push({ name: 'ProductList', params: { categoryId: this.category } });
-        } catch (error) {
-            console.error('Error adding product:', error);
-        }
+      const formData = new FormData();
+      formData.append('name', this.name);
+      formData.append('price', this.price);
+      formData.append('location', this.location);
+      formData.append('category', this.category);
+      formData.append('image', this.image); // This uploads the selected image
+      formData.append('username', currentUser.username); 
+
+      try {
+          await axios.post('http://localhost:3002/addlisting', formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
+          });
+          alert('Product added successfully!');
+          this.$router.push({ name: 'ProductList', params: { categoryId: this.category } });
+      } catch (error) {
+          console.error('Error adding product:', error);
+      }
     },
     },
     mounted() {

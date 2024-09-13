@@ -11,10 +11,6 @@
 - 📊 User-friendly Dashboard 📋
 - 🖼️ Aesthetic UI Design 🎨
 
-## 🛠️ Technologies Used 🛠️
-- Vue.js 🖥️
-- MongoDB 🗄️
-
 ## 📚 Usage Instructions 📘
 1. Register as a buyer 🧑‍🌾 or seller 🐖 or both!
 2. Explore the marketplace for unique homemade products 🥒🍯.

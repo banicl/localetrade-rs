@@ -111,16 +111,26 @@ export default {
 
         this.latestProducts = await Promise.all(
           response.data.map(async (product) => {
-            console.log('Fetching reviews for product ID:', product._id);
+            try {
+              console.log('Fetching reviews for product ID:', product._id);
 
-            const reviewsResponse = await axios.get(`http://localhost:3002/reviews/${product._id}`);
-            const reviews = reviewsResponse.data.reviews;
+              const reviewsResponse = await axios.get(`http://localhost:3002/reviews/${product._id}`);
+              const reviews = reviewsResponse.data.reviews;
 
-            const averageRating = reviews.length
-              ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
-              : 'No ratings';
+              const averageRating = reviews.length
+                ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
+                : 'No ratings';
 
-            return { ...product, averageRating };
+              return { ...product, averageRating };
+            } catch (reviewError) {
+              if (reviewError.response && reviewError.response.status === 404) {
+                // If no reviews found (404), return product with 'No reviews'
+                return { ...product, averageRating: 'No reviews' };
+              } else {
+                console.error('Error fetching reviews:', reviewError);
+                return { ...product, averageRating: 'Error fetching reviews' };
+              }
+            }
           })
         );
       } catch (error) {

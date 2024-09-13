@@ -37,7 +37,7 @@
           <p class="price">{{ product.price }}.00€</p>
 
           <div class="product-actions">
-            <button class="add-to-cart-btn" @click="addToCart(product)">Add to Cart</button>
+            <button class="contact-seller-btn" @click.stop="contactSeller(product.username)">Contact Seller</button>
             <button class="favorite-btn" @click="toggleFavorite(product._id)">
               <i :class="{'fas fa-heart': isFavorite(product._id), 'far fa-heart': !isFavorite(product._id)}"></i>
             </button>
@@ -153,8 +153,8 @@ export default {
     setRating(star) {
       this.newReview.rating = star;
     },
-    addToCart(product) {
-      alert(`Product ${product.name} added to cart!`);
+    contactSeller(sellerUsername) {
+      this.$router.push({ name: 'ChatDetails', params: { username: sellerUsername } });
     },
     async toggleFavorite(productId) {
       try {
@@ -344,17 +344,17 @@ body {
   gap: 15px;
 }
 
-.add-to-cart-btn {
+.contact-seller-btn {
   background-color: #6ba823;
   color: white;
-  padding: 10px 15px;
   border: none;
+  padding: 8px 10px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.add-to-cart-btn:hover {
+.contact-seller-btn:hover {
   background-color: #f5d826;
 }
 
