@@ -22,7 +22,7 @@ console.log("Connected to MongoDB successfully!");
 });
 
 
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', productRoutes);
 
 const PORT = process.env.PORT || 3002;
