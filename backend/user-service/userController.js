@@ -1,4 +1,5 @@
 const User = require('./userModel');
+const axios = require('axios');
 
 exports.uploadProfilePicture = async (req, res) => {
   try {
@@ -34,7 +35,7 @@ exports.getUserFavorites = async (req, res) => {
       return res.json({ favorites: [] });
     }
 
-    const productServiceUrl = 'http://localhost:3002/products/getByIds'; // product-service URL
+    const productServiceUrl = 'http://product-service:3002/products/getByIds'; // product-service URL
     const response = await axios.post(productServiceUrl, { productIds });
     console.log('Products fetched from product service:', response.data.products); // Log fetched products
 

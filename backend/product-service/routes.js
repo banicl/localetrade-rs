@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const mongoose = require('mongoose');
+const Product = require('./productModel');
 const productController = require('./productController');
 
 const storage = multer.diskStorage({
@@ -25,7 +27,7 @@ router.post('/products/getByIds', async (req, res) => {
       return res.status(400).send('Invalid product ID(s)');
     }
 
-    const products = await Product.find({ _id: { $in: productIds } });
+    const products = await Product.find({ _id: { $in: productIds } }); // Ensure Product model is used here
     console.log('Products found:', products); // Log found products
 
     if (products.length === 0) {
