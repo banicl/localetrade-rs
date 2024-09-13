@@ -119,7 +119,7 @@ export default {
     async fetchFavorites() {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
-        const response = await axios.get(`http://localhost:3000/user/favorites/${username}`);
+        const response = await axios.get(`http://localhost:3003/user/favorites/${username}`);
         this.userFavorites = response.data.favorites;
         localStorage.setItem('favorites', JSON.stringify(this.userFavorites)); // Persist to localStorage
       } catch (error) {
@@ -132,7 +132,7 @@ export default {
     async toggleFavorite(productId) {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
-        const response = await axios.post('http://localhost:3000/user/favorites', {
+        const response = await axios.post('http://localhost:3003/user/favorites', {
           productId,
           username
         });

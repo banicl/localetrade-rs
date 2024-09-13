@@ -13,16 +13,11 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Add new product
 router.post('/addlisting', upload.single('image'), productController.addProduct);
-
-// Get product by ID
 router.get('/products/:productId', productController.getProduct);
-
-// Get products by category
 router.get('/products/category/:categoryId', productController.getProductsByCategory);
-
-// Get latest products
-router.get('/latest-products', productController.getLatestProducts);
+router.get('/latestproducts', productController.getLatestProducts);
+router.get('/reviews/:productId', productController.getReviewsForProduct);
+router.post('/reviews', productController.addReview);
 
 module.exports = router;

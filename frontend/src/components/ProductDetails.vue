@@ -120,7 +120,7 @@ export default {
     },
     async fetchReviews() {
       try {
-        const response = await axios.get(`http://localhost:3000/reviews/${this.productId}`);
+        const response = await axios.get(`http://localhost:3002/reviews/${this.productId}`);
         this.reviews = response.data.reviews;
         this.calculateAverageRating();
       } catch (error) {
@@ -134,7 +134,7 @@ export default {
     async submitReview() {
       if (this.newReview.rating && this.newReview.comment && this.username) {
         try {
-          const response = await axios.post(`http://localhost:3000/reviews`, {
+          const response = await axios.post(`http://localhost:3002/reviews`, {
             productId: this.productId,
             username: this.username,
             ...this.newReview,
@@ -158,7 +158,7 @@ export default {
     },
     async toggleFavorite(productId) {
       try {
-        const response = await axios.post('http://localhost:3000/user/favorites', {
+        const response = await axios.post('http://localhost:3003/user/favorites', {
           productId,
           username: this.username,
         });
@@ -173,7 +173,7 @@ export default {
     async fetchFavorites() {
       const username = this.username;
       try {
-        const response = await axios.get(`http://localhost:3000/user/favorites/${username}`);
+        const response = await axios.get(`http://localhost:3003/user/favorites/${username}`);
         this.userFavorites = response.data.favorites;
       } catch (error) {
         console.error('Error fetching favorites:', error);

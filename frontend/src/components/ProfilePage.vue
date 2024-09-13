@@ -81,13 +81,13 @@ export default {
     formData.append('username', this.user.username); // Send username with the request
 
     try {
-      const response = await axios.post('http://localhost:3000/upload-profile-picture', formData, {
+      const response = await axios.post('http://localhost:3001/upload-profile-picture', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       
-      this.userProfilePicture = `http://localhost:3000${response.data.profilePictureUrl}?${new Date().getTime()}`;
+      this.userProfilePicture = `http://localhost:3001${response.data.profilePictureUrl}?${new Date().getTime()}`;
       
       this.user.profilePicture = response.data.profilePictureUrl;
       localStorage.setItem('user', JSON.stringify(this.user)); // Update the entire user object
@@ -108,7 +108,7 @@ export default {
       try {
         this.user = JSON.parse(userData);
         this.userProfilePicture = this.user.profilePicture 
-          ? `http://localhost:3000${this.user.profilePicture}` 
+          ? `http://localhost:3001${this.user.profilePicture}` 
           : require('@/assets/default-pic.avif');  
       } catch (e) {
         console.error('Error parsing user data:', e);

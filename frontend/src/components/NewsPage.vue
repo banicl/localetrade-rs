@@ -44,7 +44,7 @@
               :key="product._id"
               class="product-card"
               @click="goToProduct(product._id)">
-              <img :src="`http://localhost:3001/uploads/${product.image}`" alt="Product Image" class="product-image">
+              <img :src="`http://localhost:3002${product.image}`" alt="Product Image" class="product-image">
               <div class="product-info">
                 <h3>{{ product.name }} ({{ product.price }}.00€)</h3>
                 <p v-if="product.averageRating !== 'No ratings'" style="color:gray; ">
@@ -106,23 +106,21 @@ export default {
     },
     async fetchLatestProducts() {
       try {
-        const response = await axios.get('http://localhost:3000/latest-products');
+        const response = await axios.get('http://localhost:3002/latestproducts');
+        console.log('Products fetched:', response.data);
+
         this.latestProducts = await Promise.all(
-          response.data.map(async product => {
-            // Fetch the reviews for each product
-            const reviewsResponse = await axios.get(`http://localhost:3000/reviews/${product._id}`);
+          response.data.map(async (product) => {
+            console.log('Fetching reviews for product ID:', product._id);
+
+            const reviewsResponse = await axios.get(`http://localhost:3002/reviews/${product._id}`);
             const reviews = reviewsResponse.data.reviews;
 
-            // Calculate the average rating
             const averageRating = reviews.length
               ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
               : 'No ratings';
 
-            return {
-              ...product,
-              averageRating, // Add the average rating to the product data
-              categoryId: product.categoryId || 1, // Fallback in case categoryId is missing
-            };
+            return { ...product, averageRating };
           })
         );
       } catch (error) {

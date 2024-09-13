@@ -29,7 +29,7 @@
 
     <div class="product-grid">
       <div v-for="product in favoritedProducts" :key="product._id" class="product-card">
-        <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
+        <img :src="`http://localhost:3002${product.image}`" alt="Product Image" class="product-image">
         <div class="product-info">
           <h3>{{ product.name }}</h3>
           <p>{{ product.location }}</p>
@@ -68,7 +68,7 @@ export default {
     async fetchFavoritedProducts() {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
-        const response = await axios.get(`http://localhost:3000/user/favorites/${username}`);
+        const response = await axios.get(`http://localhost:3003/user/favorites/${username}`);
         this.favoritedProducts = response.data.favorites;
       } catch (error) {
         console.error('Error fetching favorited products', error);
@@ -78,7 +78,7 @@ export default {
     async removeFavorite(productId) {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
-        const response = await axios.post('http://localhost:3000/user/favorites/remove', {
+        const response = await axios.post('http://localhost:3003/user/favorites/remove', {
           productId,
           username
         });

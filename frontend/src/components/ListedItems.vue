@@ -23,11 +23,12 @@
     </div>
     <div v-if="listedProducts.length === 0" class="no-items">
       <p>No items listed yet.</p>
+      <router-link to="/addlisting">List your first item. 🍏</router-link> 
     </div>
 
     <div class="product-grid">
       <div v-for="product in listedProducts" :key="product._id" class="product-card">
-        <img :src="`http://localhost:3000${product.image}`" alt="Product Image" class="product-image">
+        <img :src="`http://localhost:3002${product.image}`" alt="Product Image" class="product-image">
         <div class="product-info">
           <h3>{{ product.name }}</h3>
           <p>{{ product.location }}</p>
@@ -65,7 +66,7 @@ export default {
     async fetchListedProducts() {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
-        const response = await axios.get(`http://localhost:3000/products/listed/${username}`);
+        const response = await axios.get(`http://localhost:3002/products/listed/${username}`);
         this.listedProducts = response.data;
       } catch (error) {
         console.error('Error fetching listed products:', error);
@@ -74,7 +75,7 @@ export default {
     async deleteProduct(productId) {
       if (confirm('Are you sure you want to delete this product?')) {
         try {
-          await axios.delete(`http://localhost:3000/products/${productId}`);
+          await axios.delete(`http://localhost:3002/products/${productId}`);
           this.listedProducts = this.listedProducts.filter(product => product._id !== productId);
           alert('Product deleted successfully');
         } catch (error) {
@@ -113,6 +114,27 @@ body {
   height: 30px;
   margin-left: 40px;
   margin-right: 10px;
+}
+
+.no-items {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 140px;
+  margin-bottom: 290px;
+}
+
+.no-items p {
+  margin-bottom: 10px;
+}
+
+.no-items a {
+  color: #f5d826;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.no-items a:hover {
+  color: rgb(205, 0, 0);
 }
 
 .listed-items-page {

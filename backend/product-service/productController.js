@@ -1,5 +1,5 @@
 const Product = require('./productModel');
-const Review = require('./reviewModel'); // Assuming Review is in a separate model
+const Review = require('./reviewModel');
 
 exports.addProduct = async (req, res) => {
   try {
@@ -10,15 +10,7 @@ exports.addProduct = async (req, res) => {
       return res.status(400).send('Missing required fields');
     }
 
-    const newProduct = new Product({
-      name,
-      price,
-      location,
-      category,
-      image,
-      username,
-    });
-
+    const newProduct = new Product({ name, price, location, category, image, username });
     await newProduct.save();
     res.status(201).send('Product added successfully');
   } catch (error) {
@@ -50,50 +42,63 @@ exports.getProductsByCategory = async (req, res) => {
       return { ...product._doc, averageRating };
     }));
 
-    const categoryMapping = {
-      1: 'Fresh Produce',
-      2: 'Dairy Products',
-      3: 'Meat and Poultry',
-      4: 'Baked Goods',
-      5: 'Seafood',
-      6: 'Beverages',
-      7: 'Pantry Staples',
-      8: 'Snacks and Confectionery',
-      9: 'Personal Care',
-      10: 'Household Items'
-    };
-
-    const categoryName = categoryMapping[req.params.categoryId] || 'Unknown Category';
-
-    res.json({
-      products: productsWithRatings,
-      categoryName
-    });
+    res.json({ products: productsWithRatings });
   } catch (error) {
     res.status(500).send('Error fetching products');
   }
 };
 
+// Fetch the latest products and their reviews
 exports.getLatestProducts = async (req, res) => {
   try {
-    const latestProducts = await Product.find().sort({ createdAt: -1 }).limit(5); // Assuming createdAt field exists
-    res.json(latestProducts);
+    const latestProducts = await Product.find().sort({ createdAt: -1 }).limit(5);
+    const productsWithReviews = await Promise.all(
+      latestProducts.map(async (product) => {
+        const reviews = await Review.find({ productId: product._id });
+        const averageRating = reviews.length > 0
+          ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
+          : 'No ratings';
+        
+        return { ...product._doc, averageRating };
+      })
+    );
+    res.json(productsWithReviews);
   } catch (error) {
     res.status(500).send('Error fetching latest products');
   }
 };
 
-exports.deleteProduct = async (req, res) => {
+exports.getReviewsForProduct = async (req, res) => {
   try {
-    const productId = req.params.productId;
-    const deletedProduct = await Product.findByIdAndDelete(productId);
-
-    if (!deletedProduct) {
-      return res.status(404).json({ message: 'Product not found' });
+    const reviews = await Review.find({ productId: req.params.productId });
+    if (!reviews.length) {
+      return res.status(404).send('No reviews found for this product');
     }
-
-    res.status(200).json({ message: 'Product deleted successfully' });
+    res.json({ reviews });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting product' });
+    res.status(500).send('Error fetching reviews');
   }
 };
+
+exports.addReview = async (req, res) => {
+  try {
+    const { productId, username, rating, comment } = req.body;
+    
+    if (!username || !productId || !rating || !comment) {
+      return res.status(400).send('Missing required fields');
+    }
+
+    const newReview = new Review({
+      productId,
+      username,
+      rating,
+      comment,
+    });
+
+    await newReview.save();
+    res.status(201).json({ review: newReview });
+  } catch (error) {
+    res.status(500).send('Error adding review');
+  }
+};
+
