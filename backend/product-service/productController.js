@@ -48,7 +48,19 @@ exports.getProductsByCategory = async (req, res) => {
   }
 };
 
-// Fetch the latest products and their reviews
+exports.getProductsByUsername = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const products = await Product.find({ username }); // Find all products listed by the user
+    if (!products.length) {
+      return res.status(404).send('No products found for this user');
+    }
+    res.json(products);
+  } catch (error) {
+    res.status(500).send('Error fetching products by user');
+  }
+};
+
 exports.getLatestProducts = async (req, res) => {
   try {
     const latestProducts = await Product.find().sort({ createdAt: -1 }).limit(5);
@@ -102,3 +114,30 @@ exports.addReview = async (req, res) => {
   }
 };
 
+exports.deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+      return res.status(404).send('Product not found');
+    }
+
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).send('Error deleting product');
+  }
+};
+
+
+exports.getProductsByIds = async (req, res) => {
+  try {
+    const { productIds } = req.body;
+    const products = await Product.find({ _id: { $in: productIds } });
+
+    res.json({ products });
+  } catch (error) {
+    console.error('Error fetching products by IDs:', error);
+    res.status(500).send('Error fetching products');
+  }
+};

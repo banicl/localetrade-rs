@@ -69,12 +69,13 @@ export default {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
         const response = await axios.get(`http://localhost:3003/user/favorites/${username}`);
+        console.log('Favorited Products:', response.data); // Debugging line to check API response
         this.favoritedProducts = response.data.favorites;
       } catch (error) {
         console.error('Error fetching favorited products', error);
+        alert('Error fetching favorited products. Please try again later.');
       }
     },
-
     async removeFavorite(productId) {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;

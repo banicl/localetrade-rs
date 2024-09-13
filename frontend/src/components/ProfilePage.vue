@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       user: null,
-      userProfilePicture: require('http://localhost:3003/uploads/default-pic.avif'),
+      userProfilePicture: `http://localhost:3003/uploads/default-pic.avif`,
       notificationMessage: '', 
       currentDate: ''
     };
@@ -75,32 +75,33 @@ export default {
       this.$refs.fileInput.click();
     },
     async uploadProfilePicture(event) {
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append('profilePicture', file);
-    formData.append('username', this.user.username); // Send username with the request
+      const file = event.target.files[0];
+      console.log('Selected file:', file); // Check if the file is correctly selected
+      const formData = new FormData();
+      formData.append('profilePicture', file);
+      formData.append('username', this.user.username);
 
-    try {
-      const response = await axios.post('http://localhost:3003/upload-profile-picture', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      
-      this.userProfilePicture = `http://localhost:3003${response.data.profilePictureUrl}?${new Date().getTime()}`;
-      
-      this.user.profilePicture = response.data.profilePictureUrl;
-      localStorage.setItem('user', JSON.stringify(this.user)); // Update the entire user object
+      try {
+        const response = await axios.post('http://localhost:3003/user/upload-profile-picture', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        console.log('Server response:', response); // Log the server response
+        this.userProfilePicture = `http://localhost:3003${response.data.profilePictureUrl}?${new Date().getTime()}`;
+        
+        this.user.profilePicture = response.data.profilePictureUrl;
+        localStorage.setItem('user', JSON.stringify(this.user)); // Update the user data in localStorage
 
-      this.notificationMessage = 'Profile picture updated successfully!';
-      
-      setTimeout(() => {
-        this.notificationMessage = '';
-      }, 3000);
-    } catch (error) {
-      console.error('Error uploading profile picture', error);
-    }
-  },
+        this.notificationMessage = 'Profile picture updated successfully!';
+        
+        setTimeout(() => {
+          this.notificationMessage = '';
+        }, 3000);
+      } catch (error) {
+        console.error('Error uploading profile picture', error); // Log any errors
+      }
+    },
   },
   created() {
     const userData = localStorage.getItem('user');
