@@ -46,20 +46,18 @@ router.get('/latestproducts', productController.getLatestProducts);
 router.get('/reviews/:productId', productController.getReviewsForProduct);
 router.get('/products/listed/:username', async (req, res) => {
   const { username } = req.params;
-
+  const limit = parseInt(req.query.limit) || 0; 
   try {
-    const lastProduct = await Product.find({ username })
+    const products = await Product.find({ username })
       .sort({ createdAt: -1 }) 
-      .limit(1); 
-
-    res.json(lastProduct);
+      .limit(limit); 
+    res.json(products);
   } catch (error) {
-    console.error('Error fetching last product for user:', error);
-    res.status(500).send('Error fetching last product');
+    console.error('Error fetching products for user:', error);
+    res.status(500).send('Error fetching products');
   }
 });
 
 router.delete('/products/:productId', productController.deleteProduct);
-
 
 module.exports = router;

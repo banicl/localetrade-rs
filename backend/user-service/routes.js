@@ -26,7 +26,7 @@ router.get('/users-with-products', async (req, res) => {
       users.map(async (user) => {
         try {
           // Fetch products for the user from the product-service
-          const productServiceUrl = `http://product-service:3002/products/listed/${user.username}?limit=3`;
+          const productServiceUrl = `http://product-service:3002/products/listed/${user.username}?limit=1`;
           const productResponse = await axios.get(productServiceUrl);
           const products = productResponse.data;
 
