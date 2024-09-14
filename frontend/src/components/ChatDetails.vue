@@ -39,7 +39,7 @@ export default {
   methods: {
     async fetchChat() {
       try {
-        const response = await axios.get(`http://localhost:3000/chat/${this.currentUser}/${this.username}`);
+        const response = await axios.get(`http://localhost:3004/chat/${this.currentUser}/${this.username}`);
         this.chatLog = response.data;
       } catch (error) {
         console.error('Error fetching chat:', error);
@@ -48,7 +48,7 @@ export default {
     async sendMessage() {
       if (this.newMessage.trim() !== '') {
         try {
-          const response = await axios.post('http://localhost:3000/chat', {
+          const response = await axios.post('http://localhost:3004/chat', {
             sender: this.currentUser,
             receiver: this.username,
             message: this.newMessage,

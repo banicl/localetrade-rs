@@ -32,6 +32,16 @@ services:
     restart: always
     environment:
       MONGO_URI: mongodb://mongo:27017/localetrade
+  
+  chat-service:
+    build: ./backend/chat-service
+    ports:
+      - "3004:3004"
+    depends_on:
+      - mongo
+    restart: always
+    environment:
+      MONGO_URI: mongodb://mongo:27017/localetrade
 
   mongo:
     image: mongo
@@ -49,4 +59,5 @@ services:
       - auth-service
       - product-service
       - user-service
+      - chat-service
     restart: always

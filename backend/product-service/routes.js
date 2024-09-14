@@ -43,11 +43,22 @@ router.post('/products/getByIds', async (req, res) => {
 
 router.get('/products/:productId', productController.getProduct);
 router.get('/products/category/:categoryId', productController.getProductsByCategory);
-router.get('/products/listed/:username', productController.getProductsByUsername);
 router.get('/latestproducts', productController.getLatestProducts);
 router.get('/reviews/:productId', productController.getReviewsForProduct);
+router.get('/products/listed/:username', async (req, res) => {
+  const { username } = req.params;
 
+  try {
+    const lastProduct = await Product.find({ username })
+      .sort({ createdAt: -1 }) // Sort by newest products first
+      .limit(1); // Only return the last (most recent) product
 
+    res.json(lastProduct);
+  } catch (error) {
+    console.error('Error fetching last product for user:', error);
+    res.status(500).send('Error fetching last product');
+  }
+});
 
 router.delete('/products/:productId', productController.deleteProduct);
 

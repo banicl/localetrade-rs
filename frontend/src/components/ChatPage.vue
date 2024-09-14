@@ -34,9 +34,11 @@
     <div v-else>
       <h1 class="section-title">👩🏻‍🌾 LAST CONVERSATIONS</h1>
       <div v-if="lastConversations.length > 0" class="last-conversations">
-        <div v-for="conversation in lastConversations" :key="conversation.otherUser" class="conversation-card" @click="openChatFromConversation(conversation.otherUser)">
+        <div v-for="conversation in lastConversations.slice().reverse()" :key="conversation.otherUser" class="conversation-card" @click="openChatFromConversation(conversation.otherUser)">
           <h3 :class="{ unread: conversation.unread }">{{ conversation.otherUser }}</h3>
-          <p>{{ conversation.lastMessage }}</p>
+          <p :style="{ color: conversation.isCurrentUserSender ? 'gray' : 'black' }">
+            {{ conversation.isCurrentUserSender ? 'You: ' : '' }}{{ conversation.lastMessage }}
+          </p>
           <span>{{ formatDateTime(conversation.lastDate) }}</span>
         </div>
       </div>
@@ -58,9 +60,10 @@
       </div>
       <div class="user-list">
         <div v-for="user in filteredUsers" :key="user.username" class="user-card" @click="openChat(user)">
-          <img :src="user.profilePicture ? `http://localhost:3000${user.profilePicture}` : 'http://localhost:3000/uploads/default-pic.avif'" alt="Profile Picture" class="profile-pic">
+          <img :src="user.profilePicture ? `http://localhost:3003${user.profilePicture}` : 'http://localhost:3003/uploads/default-pic.avif'" alt="Profile Picture" class="profile-pic">
           <div class="user-info">
             <h3>{{ user.username }}</h3>
+            <p>Last Listed: {{ user.productsListed }}</p>
             <p style="color:#6EA823;">Avg. Rating: {{ user.avgRating }}</p>
           </div>
         </div>
@@ -99,7 +102,7 @@ export default {
   methods: {
     async fetchLastConversations() {
       try {
-        const response = await axios.get(`http://localhost:3000/last-conversations/${this.currentUser}`);
+        const response = await axios.get(`http://localhost:3004/last-conversations/${this.currentUser}`);
         this.lastConversations = response.data;
       } catch (error) {
         console.error('Error fetching last conversations:', error);
@@ -107,7 +110,7 @@ export default {
     },
     async fetchUsers() {
       try {
-        const response = await axios.get('http://localhost:3000/users-with-products');
+        const response = await axios.get('http://localhost:3003/users-with-products');
         this.users = response.data;
       } catch (error) {
         console.error('Error fetching users:', error);
