@@ -53,7 +53,7 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
-      errorMessage: '', // Add error message state
+      errorMessage: '', 
     };
   },
   computed: {
@@ -72,7 +72,7 @@ export default {
       this.currentDate = new Date().toLocaleDateString();
     },
     async submitRegister() {
-      this.errorMessage = ''; // Reset error message
+      this.errorMessage = ''; 
       if (this.isPasswordValid) {
         try {
           const response = await axios.post('http://localhost:3001/register', {

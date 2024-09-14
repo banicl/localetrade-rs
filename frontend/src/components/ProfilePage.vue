@@ -76,7 +76,7 @@ export default {
     },
     async uploadProfilePicture(event) {
       const file = event.target.files[0];
-      console.log('Selected file:', file); // Check if the file is correctly selected
+      console.log('Selected file:', file); 
       const formData = new FormData();
       formData.append('profilePicture', file);
       formData.append('username', this.user.username);
@@ -87,11 +87,11 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         });
-        console.log('Server response:', response); // Log the server response
+        console.log('Server response:', response); 
         this.userProfilePicture = `http://localhost:3003${response.data.profilePictureUrl}?${new Date().getTime()}`;
         
         this.user.profilePicture = response.data.profilePictureUrl;
-        localStorage.setItem('user', JSON.stringify(this.user)); // Update the user data in localStorage
+        localStorage.setItem('user', JSON.stringify(this.user)); 
 
         this.notificationMessage = 'Profile picture updated successfully!';
         
@@ -99,7 +99,7 @@ export default {
           this.notificationMessage = '';
         }, 3000);
       } catch (error) {
-        console.error('Error uploading profile picture', error); // Log any errors
+        console.error('Error uploading profile picture', error); 
       }
     },
   },

@@ -42,7 +42,7 @@ export default {
       username: '',
       password: '',
       currentDate: '',
-      errorMessage: '', // Add error message state
+      errorMessage: '', 
     };
   },
   methods: {
@@ -56,7 +56,7 @@ export default {
       this.currentDate = new Date().toLocaleDateString();
     },
     async submitLogin() {
-      this.errorMessage = ''; // Reset error message
+      this.errorMessage = ''; 
       try {
         const response = await axios.post('http://localhost:3001/login', {
           username: this.username,

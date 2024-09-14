@@ -434,7 +434,7 @@ button {
   cursor: pointer;
   /* Adjust alignment */
   vertical-align: middle;
-  margin-top: 10px; /* Ensure some space between textarea and button */
+  margin-top: 10px; 
 }
 
 button:hover {

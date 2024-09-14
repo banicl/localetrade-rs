@@ -121,7 +121,7 @@ export default {
         const username = JSON.parse(localStorage.getItem('user')).username;
         const response = await axios.get(`http://localhost:3003/user/favorites/${username}`);
         this.userFavorites = response.data.favorites;
-        localStorage.setItem('favorites', JSON.stringify(this.userFavorites)); // Persist to localStorage
+        localStorage.setItem('favorites', JSON.stringify(this.userFavorites)); 
       } catch (error) {
         console.error('Error fetching favorites', error);
       }
@@ -166,7 +166,7 @@ export default {
   },
   watch: {
     categoryId() {
-      this.fetchProducts(); // Re-fetch products when categoryId changes
+      this.fetchProducts(); 
     }
   }
 };
@@ -334,8 +334,8 @@ body {
   text-decoration: none;
   color: white;
   transition: color 0.3s ease;
-  display: inline-block; /* Add this to allow transform */
-  transition: transform 0.3s ease-in-out; /* Smooth hover transition */
+  display: inline-block; 
+  transition: transform 0.3s ease-in-out; 
 }
 
 .category-menu li a:hover {
@@ -435,11 +435,11 @@ body {
 }
 
 .fas.fa-heart {
-  color: red; /* Filled heart when favorited */
+  color: red; 
 }
 
 .far.fa-heart {
-  color: #ccc; /* Empty heart when unfavorited */
+  color: #ccc; 
 }
 
 .favorite-btn {

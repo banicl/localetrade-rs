@@ -61,7 +61,7 @@ export default {
       }
     },
     goBack() {
-      this.$router.go(-1); // Navigate back to the chat list
+      this.$router.go(-1); 
     },
     formatDateTime(date) {
       const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -83,7 +83,7 @@ export default {
 </script>
 
 <style scoped>
-/* Global styling fix */
+
 * {
   margin: 0;
   padding: 0;
@@ -96,7 +96,6 @@ body {
   padding:0px;
 }
 
-/* Chat detail page styling */
 .chat-detail-page {
   position: absolute;
   min-height: 100vh;
@@ -153,7 +152,6 @@ body {
   text-align: center;
 }
 
-/* Chat log styling */
 .chat-log {
   max-height: 400px;
   width: 100%;

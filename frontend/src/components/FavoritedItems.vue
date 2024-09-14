@@ -69,7 +69,7 @@ export default {
       try {
         const username = JSON.parse(localStorage.getItem('user')).username;
         const response = await axios.get(`http://localhost:3003/user/favorites/${username}`);
-        console.log('Favorited Products:', response.data); // Debugging line to check API response
+        console.log('Favorited Products:', response.data);
         this.favoritedProducts = response.data.favorites;
       } catch (error) {
         console.error('Error fetching favorited products', error);
@@ -290,7 +290,7 @@ body {
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: red; /* Red heart by default */
+  color: red;
 }
 
 .favorite-btn:hover .fa-heart {

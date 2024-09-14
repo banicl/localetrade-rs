@@ -91,12 +91,6 @@ export default {
         { id: 9, name: 'Personal Care', emoji: '🧼' },
         { id: 10, name: 'Household Items', emoji: '🏠' }
       ],
-      newsItems: [
-        { id: 1, title: 'Benefits of Eating Fresh', description: 'Learn about the numerous health benefits of consuming fresh home-grown fruits and vegetables.', image: image1, link: 'https://www.healthline.com/nutrition/20-healthiest-fruits' },
-        { id: 2, title: 'Dairy Products and Health', description: 'Explore the nutritional value and health benefits of including dairy products in your diet.', image: image2, link: 'https://www.medicalnewstoday.com/articles/323458' },
-        { id: 3, title: 'Sustainable Seafood Choices', description: 'Find out how to make sustainable seafood choices that are good for you and the planet.', image: image3, link: 'https://www.nrdc.org/stories/sustainable-seafood-guide' },
-        { id: 4, title: 'Plant-Based Meat', description: 'Discover the latest advancements in plant-based meat alternatives and their impact on the food industry.', image: image4, link: 'https://www.foodnavigator.com/Article/2023/01/15/Plant-based-meat-innovation-trends-to-watch' }
-      ],
       latestProducts: [],
     };
   },
@@ -124,7 +118,6 @@ export default {
               return { ...product, averageRating };
             } catch (reviewError) {
               if (reviewError.response && reviewError.response.status === 404) {
-                // If no reviews found (404), return product with 'No reviews'
                 return { ...product, averageRating: 'No reviews' };
               } else {
                 console.error('Error fetching reviews:', reviewError);
@@ -373,7 +366,7 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
   padding: 10px;
   box-shadow: 0 2px 4px #454545;
-  min-height: 500px; /* Set max height */
+  min-height: 500px; 
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
@@ -399,24 +392,24 @@ body {
   width: 15%; 
   text-align: center;
   transition: transform 0.3s ease;
-  cursor: pointer; /* Add this line to change cursor on hover */
+  cursor: pointer; 
 }
 
 .latest-products .product-card:hover {
   transform: translateY(-10px);
-  cursor: pointer; /* This ensures the pointer shows when hovering */
+  cursor: pointer; 
 }
 
 .latest-products .product-image {
   width: 100%;
-  height: 80px; /* Smaller image size */
+  height: 80px; 
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 10px;
 }
 
 .latest-products .product-info h3 {
-  font-size: 16px; /* Reduce text size */
+  font-size: 16px; 
   margin-bottom: 5px;
   color: #6ba823;
 }
