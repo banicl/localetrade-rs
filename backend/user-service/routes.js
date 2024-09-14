@@ -20,7 +20,7 @@ const upload = multer({ storage: storage });
 router.get('/user/favorites/:username', getUserFavorites);
 router.get('/users-with-products', async (req, res) => {
   try {
-    const users = await User.find().lean(); // Get all users
+    const users = await User.find().lean(); 
 
     const usersWithProducts = await Promise.all(
       users.map(async (user) => {

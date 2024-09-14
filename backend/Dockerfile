@@ -7,7 +7,6 @@ RUN npm install
 
 COPY . .
 
-# Rebuild bcrypt for the correct environment
 RUN npm rebuild bcrypt --build-from-source
 
 EXPOSE 3000

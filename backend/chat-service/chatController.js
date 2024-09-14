@@ -54,10 +54,10 @@ exports.getLastConversations = async (req, res) => {
                 $cond: [{ $and: [{ $eq: ['$receiver', username] }, { $eq: ['$isRead', false] }] }, true, false] 
               } 
             },
-            isCurrentUserSender: { $first: { $eq: ['$sender', username] } } // Add this to track if the current user sent the last message
+            isCurrentUserSender: { $first: { $eq: ['$sender', username] } } 
           }
         },
-        { $limit: 3 } // Limit to last 3 conversations
+        { $limit: 3 } 
       ]);
   
       console.log('Last Conversations:', lastConversations);
@@ -72,19 +72,19 @@ exports.getLastConversations = async (req, res) => {
             const userInfo = userResponse.data;
   
             return {
-              otherUser: userInfo.username, // Use the username from user-service
+              otherUser: userInfo.username, 
               profilePicture: userInfo.profilePicture,
               lastMessage: conversation.lastMessage,
               lastDate: conversation.lastDate,
               unread: conversation.unread,
-              isCurrentUserSender: conversation.isCurrentUserSender, // Pass the flag to the frontend
+              isCurrentUserSender: conversation.isCurrentUserSender, 
             };
           } catch (error) {
             console.error(`Error fetching user info for ${conversation._id}:`, error.message);
-            // Return basic info if user-service call fails
+            
             return {
               otherUser: conversation._id,
-              profilePicture: null, // Default in case of failure
+              profilePicture: null, 
               lastMessage: conversation.lastMessage,
               lastDate: conversation.lastDate,
               unread: conversation.unread,

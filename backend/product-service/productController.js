@@ -15,7 +15,7 @@ exports.addProduct = async (req, res) => {
       await newProduct.save();
       res.status(201).send('Product added successfully');
   } catch (error) {
-      console.error('Error adding product:', error); // Log exact error
+      console.error('Error adding product:', error); 
       res.status(500).send('Error adding product');
   }
 };
@@ -54,7 +54,7 @@ exports.getProductsByCategory = async (req, res) => {
 exports.getProductsByUsername = async (req, res) => {
   try {
     const { username } = req.params;
-    const products = await Product.find({ username }); // Find all products listed by the user
+    const products = await Product.find({ username }); 
     if (!products.length) {
       return res.status(404).send('No products found for this user');
     }
@@ -72,7 +72,7 @@ exports.getLatestProducts = async (req, res) => {
         const reviews = await Review.find({ productId: product._id });
         const averageRating = reviews.length > 0
           ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
-          : 'No reviews';  // Assign 'No reviews' if there are no reviews
+          : 'No reviews';  
         
         return { ...product._doc, averageRating };
       })
